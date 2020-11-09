@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin')
@@ -14,7 +15,7 @@ module.exports = {
     output: {
         filename: "js/bundle-[hash].js",
         path: path.resolve(__dirname, 'dist'),
-        publicPath: "",
+        publicPath: ""
     },
     module: {
         rules: [
@@ -35,7 +36,7 @@ module.exports = {
                         ]
                     }
                 }],
-                exclude: '/node_module'
+                exclude: '/node_module/'
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
@@ -80,13 +81,15 @@ module.exports = {
         new CleanWebpackPlugin(),
         new UglifyWebpackPlugin({
             parallel: 4
-        })
+        }),
+        new webpack.HotModuleReplacementPlugin()
     ],
     devServer: {
+        contentBase: "./dist",
         port: 3000,
         hot: true,
-        host: '0.0.0.0'
-        // compress: true,
-        // cache: true
+        host: '0.0.0.0',//允许局域网别的客户端服务
+        hotOnly: true, // 模块刷新，不会做页面刷新
+        compress: true
     }
 }

@@ -3,7 +3,6 @@
         <div class="formItem">
             <h4>个人信息</h4>
             <input-item :info="formInfo.name" is-necessary v-model="userInfo.name"></input-item>
-            <input-item :info="formInfo.detailAddress" is-necessary v-model="userInfo.detailAddress"></input-item>
             <select-item :info="formInfo.certificates" v-model="userInfo.certificatesType" :option-arr="optionArr"
                          is-necessary></select-item>
             <input-item :info="formInfo.certificatesNumber" v-model="userInfo.certificatesNumber"
@@ -54,7 +53,8 @@
             <input-item :info="formInfo.storeAddressDetail" is-necessary
                         v-model="userInfo.storeAddressDetail"></input-item>
             <input-item :info="formInfo.storeManager" is-necessary v-model="userInfo.storeManager"></input-item>
-            <input-item :info="formInfo.storePhone" is-necessary v-model="userInfo.storePhone"></input-item>
+            <input-item type="number" :info="formInfo.storePhone" is-necessary
+                        v-model="userInfo.storePhone"></input-item>
             <input-item :info="formInfo.note" v-model="userInfo.note"></input-item>
             <button class="submitBtn" @click="submitForm">提交</button>
         </div>
@@ -154,7 +154,11 @@
             getOptionArr() {
             },
             submitForm() {
+                this.validateForm()
                 // axios()
+            },
+            validateForm() {
+                // console.log(this.userInfo)
             }
         }
     }
