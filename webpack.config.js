@@ -14,7 +14,7 @@ module.exports = {
     output: {
         filename: "js/bundle-[hash].js",
         path: path.resolve(__dirname, 'dist'),
-        publicPath: ""
+        publicPath: "",
     },
     module: {
         rules: [
@@ -39,7 +39,14 @@ module.exports = {
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
-                loader: 'file-loader'
+                use: [{
+                    loader: "file-loader",
+                    options: {
+                        publicPath: '../css',
+                        outputPath: 'css',
+                        name: '[name].[ext]',
+                    }
+                }]
             },
             {
                 test: /\.css$/,
@@ -61,7 +68,7 @@ module.exports = {
         minimizer: [
             new OptimizeCssAssetsWebpackPlugin(),
             new MiniCssExtractPlugin({
-                filename:'css/[name]-[hash].css'
+                filename: 'css/[name]-[hash].css'
             })
         ]
     },
