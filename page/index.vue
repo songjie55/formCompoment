@@ -1,5 +1,5 @@
 <template>
-    <div class="form">
+    <div class="contain">
         <div class="formItem">
             <h4>个人信息</h4>
             <input-item :info="formInfo.name" is-necessary v-model="userInfo.name"></input-item>
@@ -58,15 +58,19 @@
             <input-item :info="formInfo.note" v-model="userInfo.note"></input-item>
             <button class="submitBtn" @click="submitForm">提交</button>
         </div>
+        <div v-if="isSubmitForm" class="resultBox">
+            <img :src="isSuccess?sucImg:failImg" alt="">
+            <p>提交{{isSuccess?'成功':'失败'}}</p>
+        </div>
     </div>
 </template>
 
 <script>
-    import inputItem from './components/inputItem.vue'
-    import selectItem from "./components/selectItem.vue";
-    import areaSelect from "./components/areaSelect.vue";
-    import checkItem from "./components/checkItem.vue";
-    import dateSelect from "./components/dateSelect.vue";
+    import inputItem from './components/inputItem'
+    import selectItem from "./components/selectItem";
+    import areaSelect from "./components/areaSelect";
+    import checkItem from "./components/checkItem";
+    import dateSelect from "./components/dateSelect";
     import axios from 'axios'
 
     export default {
@@ -76,6 +80,10 @@
             return {
                 axiosConfig: {},
                 isUser: true,
+                sucImg: require("../static/success.jpg"),
+                failImg: require("../static/fail.jpg"),
+                isSuccess: true,
+                isSubmitForm: false,
                 optionArr: [
                     {label: '居民身份证', value: 1},
                     {label: '居民户口簿', value: 2},
@@ -90,7 +98,7 @@
                     {label: '999感冒灵', value: 3}
                 ],
                 storeArr: [
-                    {label: '99药店', value: 1},
+                    {label: '999药店', value: 1},
                     {label: '88药店', value: 2},
                     {label: '头皮发麻药店', value: 3}
                 ],
@@ -150,6 +158,9 @@
                 html = document.getElementsByTagName('html')[0];
             html.style.fontSize = (100 * vw / 375) + 'px'
         },
+        mounted() {
+            this.getOptionArr()
+        },
         methods: {
             getOptionArr() {
             },
@@ -158,7 +169,7 @@
                 // axios()
             },
             validateForm() {
-                // console.log(this.userInfo)
+                console.log(this.userInfo)
             }
         }
     }
@@ -247,5 +258,23 @@
         color: #ffffff;
         font-size: .18rem;
         border: none;
+    }
+
+    .resultBox {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 100;
+        background: #fff;
+        width: 100vw;
+        height: 80vh;
+        font-size: .13rem;
+        color: #333333;
+        text-align: center;
+        padding-top: 20vh;
+
+        img {
+            width: 20%;
+        }
     }
 </style>

@@ -59,6 +59,19 @@ module.exports = {
                 exclude: '/node_module'
             },
             {
+                test: /\.(gif|jpg|png|svg)/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 8192,
+                            outputPath: 'images',
+                            esModule: false//不然会出现[object module]
+                        }
+                    }
+                ]
+            },
+            {
                 test: /\.vue$/,
                 use: 'vue-loader'
             }
@@ -84,6 +97,9 @@ module.exports = {
         }),
         new webpack.HotModuleReplacementPlugin()
     ],
+    resolve: {
+        extensions: ['.js', '.json', '.vue', '.css', '.less'], // 模块的后缀名
+    },
     devServer: {
         contentBase: "./dist",
         port: 3000,
