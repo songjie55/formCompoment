@@ -60,7 +60,7 @@ module.exports = {
             },
             {
                 test: /\.less$/,
-                use: [(process.env.MODE === "development" ? 'style-loader' : MiniCssExtractPlugin.loader), 'css-loader', 'less-loader', 'postcss-loader'],
+                use: [(process.env.MODE === "development" ? 'style-loader' : MiniCssExtractPlugin.loader), 'css-loader', 'postcss-loader', 'less-loader'],//less-loader和postcss-loader两者的顺序无所谓谁前谁后
                 exclude: '/node_modules/'
             },
             {

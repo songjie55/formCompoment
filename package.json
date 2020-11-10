@@ -47,5 +47,11 @@
     "element-china-area-data": "^5.0.2",
     "element-ui": "^2.14.0",
     "vue": "^2.6.12"
-  }
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1%",
+    "iOS 7",
+    "last 3 iOS versions"
+  ]
 }
