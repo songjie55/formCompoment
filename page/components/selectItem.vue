@@ -4,7 +4,7 @@
             <div class="arrow"></div>
         </label>
         <div class="select">
-            <el-select :filterable="isSearch"  v-model="showValue" :placeholder="info.placeholder" @change="changeValue">
+            <el-select :filterable="isSearch"  :value="value" :placeholder="info.placeholder" @change="changeValue">
                 <!--补个value不然值变了，但是不会回显-->
                 <el-option
                         v-for="item in [{value: null, label: '请选择'}, ...optionArr]"
@@ -22,6 +22,7 @@
     export default {
         name: "selectItem",
         props: {
+            value:'',
             optionArr: {
                 default: [],
                 type: Array
@@ -39,11 +40,6 @@
         model: {
             prop: 'value',
             event: 'valChange'
-        },
-        data() {
-            return {
-                showValue: ''
-            }
         },
         methods: {
             changeValue(val) {

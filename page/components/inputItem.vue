@@ -3,7 +3,7 @@
         <label>{{info.label}}<i v-if="isNecessary">*</i>
             <slot name="label"></slot>
         </label>
-        <input :type="type" :placeholder="info.placeholder" @input="changeValue">
+        <input :type="type" :value="value" :placeholder="info.placeholder" @input="changeValue">
     </div>
 </template>
 
@@ -15,6 +15,7 @@
             event: 'valChange'
         },
         props: {
+            value: '',//添加一个回显
             type: {
                 default: 'text',
                 type: String

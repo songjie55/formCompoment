@@ -72,6 +72,7 @@
     import checkItem from "./components/checkItem";
     import dateSelect from "./components/dateSelect";
     import axios from 'axios'
+    import Schema from 'async-validator'
 
     export default {
         name: "index",
@@ -169,7 +170,48 @@
                 // axios()
             },
             validateForm() {
-                console.log(this.userInfo)
+                console.log(this.userInfo);
+                //     certificatesNumber: '',
+                //     age: '',
+                //     area: '',
+                //     tel: '',
+                //     detailAddress: '',
+                //     isTravel: false,
+                //     isFever: false,
+                //     isCough: false,
+                //     isOther: false,
+                //     isSeeD: false,
+                //     emergency: '',
+                //     emergencyPhone: '',
+                //     drugName: null,
+                //     buyTime: null,
+                //     drugstore: null,
+                //     storeAddress: '',
+                //     storeAddressDetail: '',
+                //     storeManager: '',
+                //     storePhone: '',
+                //     note: ''
+                const descriptor = {
+                    name: {
+                        type: 'string',
+                        require: true,
+                        message: '请输入正确姓名'
+                    },
+                    from: {
+                        require: true,
+                        message: '请选择来源情况'
+                    },
+                    certificatesType: {
+                        require: true,
+                        message: '请选择证件类型'
+                    }
+                };
+                const validator = new Schema(descriptor);
+                validator.validate(this.userInfo).then(() => {
+                }).catch((error, fields) => {
+                    console.log(error)
+                    console.log(fields)
+                })
             }
         }
     }
