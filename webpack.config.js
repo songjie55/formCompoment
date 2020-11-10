@@ -41,7 +41,7 @@ module.exports = {
                         ]
                     }
                 }],
-                exclude: '/node_module/'
+                exclude: '/node_modules/'
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
@@ -61,7 +61,7 @@ module.exports = {
             {
                 test: /\.less$/,
                 use: [(process.env.MODE === "development" ? 'style-loader' : MiniCssExtractPlugin.loader), 'css-loader', 'less-loader', 'postcss-loader'],
-                exclude: '/node_module/'
+                exclude: '/node_modules/'
             },
             {
                 test: /\.(gif|jpg|png|svg)/,
@@ -89,7 +89,7 @@ module.exports = {
             cacheGroups: {
                 vendors: {
                     name: 'vendor',
-                    test: '/[\\/]node_module[\\/]/',
+                    test: '/[\\/]node_modules[\\/]/',
                     priority: -10
                 },
                 common: {
