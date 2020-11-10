@@ -30,7 +30,7 @@
             <check-item :info="formInfo.isTravel" v-model="userInfo.isTravel" :showType="false"></check-item>
         </div>
         <div class="formItem">
-            <h4>用药者来源情况<i>*</i></h4>
+            <h4>症状<i>*</i></h4>
             <check-item :info="formInfo.isFever" v-model="userInfo.isFever"></check-item>
             <check-item :info="formInfo.isCough" v-model="userInfo.isCough"></check-item>
             <check-item :info="formInfo.isOther" v-model="userInfo.isOther"></check-item>
@@ -56,11 +56,15 @@
             <input-item type="number" :info="formInfo.storePhone" is-necessary
                         v-model="userInfo.storePhone"></input-item>
             <input-item :info="formInfo.note" v-model="userInfo.note"></input-item>
-            <button class="submitBtn" @click="submitForm">提交</button>
+            <button class="submitBtn" @click="validateForm">提交</button>
         </div>
         <div v-if="isSubmitForm" class="resultBox">
             <img :src="isSuccess?sucImg:failImg" alt="">
             <p>提交{{isSuccess?'成功':'失败'}}</p>
+        </div>
+        <div class="errorMsg" :class="isError?'showMsg':''">
+            <p>{{errorMsg}}</p>
+            <button @click="isError=false">确定</button>
         </div>
     </div>
 </template>
@@ -80,6 +84,8 @@
         data() {
             return {
                 axiosConfig: {},
+                isError: false,
+                errorMsg: '错误提示语',
                 isUser: true,
                 sucImg: require("../static/success.jpg"),
                 failImg: require("../static/fail.jpg"),
@@ -109,7 +115,7 @@
                     area: {label: '目前居住地址', placeholder: '请选择地址'},
                     certificatesNumber: {label: '证件号码', placeholder: '请输入用药者证件号码'},
                     age: {label: '年龄', placeholder: '请输入用药者的年龄'},
-                    tel: {label: '联系电话', placeholder: '请输入联系电话'},
+                    tel: {label: '联系电话', placeholder: '请输入联系电话(手机)'},
                     detailAddress: {label: '详细地址', placeholder: '请输入详细地址'},
                     isTravel: {label: '境外旅居史'},
                     isFever: {label: '发烧'},
@@ -128,7 +134,7 @@
                     note: {label: '备注', placeholder: '备注信息'},
                 },
                 userInfo: {
-                    name: '',
+                    name: null,
                     from: '',
                     certificatesType: null,
                     certificatesNumber: '',
@@ -146,7 +152,7 @@
                     drugName: null,
                     buyTime: null,
                     drugstore: null,
-                    storeAddress: '',
+                    storeAddress: null,
                     storeAddressDetail: '',
                     storeManager: '',
                     storePhone: '',
@@ -163,55 +169,120 @@
             this.getOptionArr()
         },
         methods: {
-            getOptionArr() {
+            showErrorMsg(msg) {
+                this.isError = true;
+                this.errorMsg = msg;
             },
-            submitForm() {
-                this.validateForm()
-                // axios()
+            getOptionArr() {
             },
             validateForm() {
                 console.log(this.userInfo);
-                //     certificatesNumber: '',
-                //     age: '',
-                //     area: '',
-                //     tel: '',
-                //     detailAddress: '',
-                //     isTravel: false,
-                //     isFever: false,
-                //     isCough: false,
-                //     isOther: false,
-                //     isSeeD: false,
-                //     emergency: '',
-                //     emergencyPhone: '',
-                //     drugName: null,
-                //     buyTime: null,
-                //     drugstore: null,
-                //     storeAddress: '',
-                //     storeAddressDetail: '',
-                //     storeManager: '',
-                //     storePhone: '',
-                //     note: ''
                 const descriptor = {
                     name: {
                         type: 'string',
-                        require: true,
+                        required: true,
+                        Pattern: /\S/g,
                         message: '请输入正确姓名'
                     },
+                    certificatesType: {
+                        required: true,
+                        message: '请选择证件类型',
+                        validator: (rule, value) => value !== null && value !== ''
+                    },
+                    certificatesNumber: {
+                        required: true,
+                        message: '请输入正确证件号码',
+                        Pattern: /\S/g
+                    },
+                    age: {
+                        required: true,
+                        message: '请输入正确年龄',
+                    },
+                    tel: {
+                        required: true,
+                        message: '请输入正确联系电话',
+                        validator: (rule, value) => {
+                            return /^1(3|4|5|6|7|8|9)\d{9}$/.test(value)
+                        }
+                    },
+                    area: {
+                        required: true,
+                        message: '请选择居住地区域',
+                        validator: (rule, value) => value !== null && value !== ''
+                    },
+                    detailAddress: {
+                        type: 'string',
+                        required: true,
+                        Pattern: /\S/g,
+                        message: '请输入详细地址'
+                    },
                     from: {
-                        require: true,
+                        required: true,
                         message: '请选择来源情况'
                     },
-                    certificatesType: {
-                        require: true,
-                        message: '请选择证件类型'
+                    emergency: {
+                        type: 'string',
+                        required: true,
+                        Pattern: /\S/g,
+                        message: '请输入紧急联系人姓名'
+                    },
+                    emergencyPhone: {
+                        required: true,
+                        message: '请输入紧急联系人联系电话',
+                        validator: (rule, value) => {
+                            return /^1(3|4|5|6|7|8|9)\d{9}$/.test(value)
+                        }
+                    },
+                    drugName: {
+                        required: true,
+                        message: '请选择购买药品名称',
+                        validator: (rule, value) => value !== null && value !== ''
+                    },
+                    buyTime: {
+                        required: true,
+                        message: '请选择购药时间',
+                        validator: (rule, value) => value !== null && value !== ''
+                    },
+                    drugstore: {
+                        required: true,
+                        message: '请选择药店名称',
+                        validator: (rule, value) => value !== null && value !== ''
+                    },
+                    storeAddress: {
+                        required: true,
+                        message: '请选择药店所属区域',
+                        validator: (rule, value) => value !== null && value !== ''
+                    },
+                    storeAddressDetail: {
+                        type: 'string',
+                        required: true,
+                        Pattern: /\S/g,
+                        message: '请输入药店详细地址'
+                    },
+                    storeManager: {
+                        type: 'string',
+                        required: true,
+                        Pattern: /\S/g,
+                        message: '请输入药店联系人姓名'
+                    },
+                    storePhone: {
+                        required: true,
+                        message: '请输入药店联系人联系电话',
+                        validator: (rule, value) => {
+                            return /^1(3|4|5|6|7|8|9)\d{9}$/.test(value)
+                        }
                     }
                 };
                 const validator = new Schema(descriptor);
-                validator.validate(this.userInfo).then(() => {
-                }).catch((error, fields) => {
-                    console.log(error)
-                    console.log(fields)
+                validator.validate(this.userInfo, {first: true}).then(() => {
+                    console.log('passed')
+                    this.postForm();
+                }).catch(({errors, fields}) => {
+                    this.showErrorMsg(`${errors[0].message}`)
                 })
+            },
+            postForm() {
+
             }
         }
     }
@@ -302,11 +373,12 @@
         border: none;
     }
 
+
     .resultBox {
         position: fixed;
+        z-index: 100;
         left: 0;
         top: 0;
-        z-index: 100;
         background: #fff;
         width: 100vw;
         height: 80vh;
@@ -318,5 +390,41 @@
         img {
             width: 20%;
         }
+    }
+
+    .errorMsg {
+        width: 60vw;
+        padding: .2rem .1rem;
+        border-radius: .15rem;
+        background: #fff;
+        position: fixed;
+        z-index: -100;
+        left: 50%;
+        font-size: .13rem;
+        top: 50%;
+        transform: translate(-50%, -60%);
+        text-align: center;
+        border: 1px solid #eee;
+        visibility: hidden;
+        transition: all 500ms;
+
+        button {
+            margin-top: 0.2rem;
+            margin-right: 0.1rem;
+            float: right;
+            display: block;
+            border-radius: 0.15rem;
+            border: none;
+            color: #fff;
+            background: #0B9BE3;
+            padding: 0.1rem 0.15rem;
+            outline: none;
+        }
+    }
+
+    .showMsg {
+        z-index: 100;
+        transform: translate(-50%, -50%);
+        visibility: visible;
     }
 </style>

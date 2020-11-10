@@ -4,10 +4,10 @@
             <div class="arrow"></div>
         </label>
         <div class="select">
-            <el-select :filterable="isSearch"  :value="value" :placeholder="info.placeholder" @change="changeValue">
+            <el-select :filterable="isSearch" :value="value" :placeholder="info.placeholder" @change="changeValue">
                 <!--补个value不然值变了，但是不会回显-->
                 <el-option
-                        v-for="item in [{value: null, label: '请选择'}, ...optionArr]"
+                        v-for="item in [{value: '', label: '请选择'}, ...optionArr]"
                         :disabled="item.label=='请选择'"
                         :key="item.value"
                         :label="item.label"
@@ -22,7 +22,7 @@
     export default {
         name: "selectItem",
         props: {
-            value:'',
+            value: '',//这里的默认值和option中的只能用空字符串表示默认未选择，不然Option的颜色会不一样
             optionArr: {
                 default: [],
                 type: Array
