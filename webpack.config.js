@@ -15,7 +15,7 @@ if (process.env.MODE !== 'development') {
 module.exports = {
     mode: process.env.MODE === 'development' ? 'development' : 'production',
     entry: {
-        index: path.resolve(__dirname, 'main.js'),
+        index: path.resolve(__dirname, process.env.PAGE + '.js'),
     },
     output: {
         filename: "js/bundle-[hash].js",

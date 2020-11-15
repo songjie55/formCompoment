@@ -18,16 +18,17 @@
             </input-item>
             <area-select :info="formInfo.area" is-necessary v-model="userInfo.area"></area-select>
             <input-item :info="formInfo.detailAddress" is-necessary v-model="userInfo.detailAddress"></input-item>
+            <check-item :info="formInfo.userSex" v-model="userInfo.userSex" :show-type="2"></check-item>
         </div>
         <div class="formItem">
             <h4>用药者来源情况<i>*</i></h4>
-            <el-radio-group v-model="userInfo.from">
-                <el-radio label="1">来自高风险地区</el-radio>
-                <el-radio label="2">14天内到过中高风险地区</el-radio>
-                <el-radio label="3">与来自中高风险地区人员密切接触</el-radio>
-                <el-radio label="4">其他</el-radio>
-            </el-radio-group>
-            <check-item :info="formInfo.isTravel" v-model="userInfo.isTravel" :showType="false"></check-item>
+            <el-checkbox-group v-model="userInfo.from" @change="changeFrom">
+                <el-checkbox :disabled="isNotOther" label="1">来自高风险地区</el-checkbox>
+                <el-checkbox :disabled="isNotOther" label="2">14天内到过中高风险地区</el-checkbox>
+                <el-checkbox :disabled="isNotOther" label="3">与来自中高风险地区人员密切接触</el-checkbox>
+                <el-checkbox :disabled="isOther" label="4">其他</el-checkbox>
+            </el-checkbox-group>
+            <check-item :info="formInfo.isTravel" v-model="userInfo.isTravel" :show-type="1"></check-item>
         </div>
         <div class="formItem">
             <h4>症状<i>*</i></h4>
@@ -44,19 +45,24 @@
         </div>
         <div class="formItem">
             <h4>购药信息</h4>
-            <select-item :info="formInfo.drugName" v-model="userInfo.drugName" :option-arr="drugArr"
+            <select-item :info="formInfo.drugName" value-property="id" :is-mulitple="true" show-property="drugNameChn"
+                         @getOptions="getOptionArr"
+                         v-model="userInfo.drugName"
+                         :option-arr="drugArr"
                          is-search is-necessary></select-item>
             <date-select :info="formInfo.buyTime" is-necessary v-model="userInfo.buyTime"></date-select>
-            <select-item :info="formInfo.drugstore" v-model="userInfo.drugstore" :option-arr="storeArr"
-                         is-search is-necessary></select-item>
-            <area-select :info="formInfo.storeAddress" is-necessary v-model="userInfo.storeAddress"></area-select>
+            <input-item :disabled="true" :info="formInfo.drugstore" is-necessary
+                        v-model="userInfo.drugstore"></input-item>
+            <area-select :placeholder="placeholder" :info="formInfo.storeAddress" is-necessary
+                         @changeStoreAddress="isChangeStoreAddress=true"
+                         v-model="userInfo.storeAddress"></area-select>
             <input-item :info="formInfo.storeAddressDetail" is-necessary
                         v-model="userInfo.storeAddressDetail"></input-item>
             <input-item :info="formInfo.storeManager" is-necessary v-model="userInfo.storeManager"></input-item>
             <input-item type="number" :info="formInfo.storePhone" is-necessary
                         v-model="userInfo.storePhone"></input-item>
             <input-item :info="formInfo.note" v-model="userInfo.note"></input-item>
-            <button class="submitBtn" @click="validateForm">提交</button>
+            <button :disabled="isSumbiting" class="submitBtn" @click="validateForm">{{isSumbiting?'提交中':'提交'}}</button>
         </div>
         <div v-if="isSubmitForm" class="resultBox">
             <img :src="isSuccess?sucImg:failImg" alt="">
@@ -75,17 +81,21 @@
     import areaSelect from "./components/areaSelect";
     import checkItem from "./components/checkItem";
     import dateSelect from "./components/dateSelect";
-    import axios from 'axios'
     import Schema from 'async-validator'
+    import {CodeToText} from 'element-china-area-data'
 
     export default {
         name: "index",
         components: {inputItem, selectItem, areaSelect, checkItem, dateSelect},
         data() {
             return {
-                axiosConfig: {},
+                placeholder: '',
+                isChangeStoreAddress: false,
                 isError: false,
+                isSumbiting: false,
                 errorMsg: '错误提示语',
+                isNotOther: false,
+                isOther: false,
                 isUser: true,
                 sucImg: require("../static/success.jpg"),
                 failImg: require("../static/fail.jpg"),
@@ -99,16 +109,8 @@
                     {label: '驾驶证', value: 5},
                     {label: '港澳居民来往内地通行证', value: 6}
                 ],
-                drugArr: [
-                    {label: '阿莫西林', value: 1},
-                    {label: '阿司匹林', value: 2},
-                    {label: '999感冒灵', value: 3}
-                ],
-                storeArr: [
-                    {label: '999药店', value: 1},
-                    {label: '88药店', value: 2},
-                    {label: '头皮发麻药店', value: 3}
-                ],
+                drugArr: [],
+                storeArr: [],
                 formInfo: {
                     name: {label: '用药者姓名', placeholder: '请输入用药者姓名'},
                     certificates: {label: '用药者证件', placeholder: '请选择'},
@@ -117,6 +119,7 @@
                     age: {label: '年龄', placeholder: '请输入用药者的年龄'},
                     tel: {label: '联系电话', placeholder: '请输入联系电话(手机)'},
                     detailAddress: {label: '详细地址', placeholder: '请输入详细地址'},
+                    userSex: {label: '性别'},
                     isTravel: {label: '境外旅居史'},
                     isFever: {label: '发烧'},
                     isCough: {label: '咳嗽'},
@@ -124,7 +127,7 @@
                     isSeeD: {label: '是否到医院就诊'},
                     emergency: {label: '紧急联系人', placeholder: '请输入紧急联系人姓名'},
                     emergencyPhone: {label: '紧急联系人电话', placeholder: '请输入紧急联系人电话'},
-                    drugName: {label: '购买药品名称', placeholder: '请输入购买药品名称'},
+                    drugName: {label: '购买药品名称', placeholder: '请输入模糊查询关键字(例如:药名+制药公司+规格)'},
                     buyTime: {label: '购买时间', placeholder: '请输入购买时间'},
                     drugstore: {label: '药店名称', placeholder: '请输入药店名称'},
                     storeAddress: {label: '药店地址', placeholder: '请输入药店地址'},
@@ -135,13 +138,14 @@
                 },
                 userInfo: {
                     name: null,
-                    from: '',
+                    from: [],
                     certificatesType: null,
                     certificatesNumber: '',
                     age: '',
                     area: '',
                     tel: '',
                     detailAddress: '',
+                    userSex: false,
                     isTravel: false,
                     isFever: false,
                     isCough: false,
@@ -152,7 +156,8 @@
                     drugName: null,
                     buyTime: null,
                     drugstore: null,
-                    storeAddress: null,
+                    storeCode: '',
+                    storeAddress: [],
                     storeAddressDetail: '',
                     storeManager: '',
                     storePhone: '',
@@ -160,23 +165,80 @@
                 }
             }
         },
-        beforeCreate() {
-            let vw = document.body.clientWidth,
-                html = document.getElementsByTagName('html')[0];
-            html.style.fontSize = (100 * vw / 375) + 'px'
-        },
         mounted() {
-            this.getOptionArr()
+            //获取药店信息
+            this.getStoreDetail()
         },
         methods: {
+            changeFrom() {
+                if (this.userInfo.from.length > 0) {
+                    if (this.userInfo.from.find(i => i === '4')) {
+                        this.isOther = false;
+                        this.isNotOther = true;
+                    } else {
+                        this.isOther = true;
+                        this.isNotOther = false;
+                    }
+                } else {
+                    this.isOther = false;
+                    this.isNotOther = false;
+                }
+            },
+            decryptCode(list) {
+                let name = '';
+                list.map(item => name += CodeToText[item] + '/')
+                return name
+            },
             showErrorMsg(msg) {
                 this.isError = true;
                 this.errorMsg = msg;
             },
-            getOptionArr() {
+            getStoreDetail() {
+                this.axios({
+                    method: 'get',
+                    url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/quenyCompNameToCompany`,
+                }).then(res => {
+                    let data = res.data.data
+                    this.userInfo.drugstore = data.compName;
+                    this.userInfo.storeCode = data.storeCode;
+                    this.placeholder = [data.storeProvince, data.storeCity, data.storeCounty].join('/');
+                    this.userInfo.storeAddressDetail = data.storeAddress;
+                })
+            },
+            getOptionArr(obj) {
+                if (obj) {
+                    let data = {drugNameChn: '', produceCompany: '', drugSpec: ''};
+                    if (obj.value.indexOf('+') > -1) {
+                        let arr = obj.value.split('+');
+                        if (arr.length === 3) {
+                            data.drugNameChn = arr[0]
+                            data.produceCompany = arr[1]
+                            data.drugSpec = arr[2]
+                        }
+                        if (arr.length === 2) {
+                            data.drugNameChn = arr[0]
+                            data.produceCompany = arr[1]
+                        }
+                    } else {
+                        data.drugNameChn = obj.value;
+                    }
+                    this.axios({
+                        method: 'post',
+                        url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/quenyDrugToName`,
+                        data: data,
+                    }).then(res => {
+                        if (res.data.data.length > 1000) {
+                            this.showErrorMsg('查询结果过多，请添加关键词进行匹配')
+                            return false
+                        }
+                        this.drugArr = res.data.data;
+                    })
+                }
             },
             validateForm() {
-                console.log(this.userInfo);
+                if (this.isSumbiting) {
+                    return false;
+                }
                 const descriptor = {
                     name: {
                         type: 'string',
@@ -218,7 +280,8 @@
                     },
                     from: {
                         required: true,
-                        message: '请选择来源情况'
+                        message: '请选择来源情况',
+                        validator: (rule, value) => value !== null && value !== ''
                     },
                     emergency: {
                         type: 'string',
@@ -282,7 +345,61 @@
                 })
             },
             postForm() {
+                this.isSumbiting = true;
+                let obj = {};
+                obj.drugUserName = this.userInfo.name;
+                obj.idCard = this.userInfo.certificatesNumber;
+                obj.userAge = this.userInfo.age;
+                obj.userSex = this.userInfo.userSex ? 'F' : 'M';
+                obj.userPhone = this.userInfo.tel;
+                obj.isUserPhone = this.isUser ? 1 : 0;
+                obj.isFromHighRisk = this.userInfo.from.find(i => i === '1') !== undefined ? 1 : 0;
+                obj.isCloseWithHighPeople = this.userInfo.from.find(i => i === '3') !== undefined ? 1 : 0;
+                obj.isOtherSource = this.userInfo.from.find(i => i === '4') !== undefined ? 1 : 0;
+                obj.isToHighRiskIn14 = this.userInfo.from.find(i => i === '2') !== undefined ? 1 : 0;
+                obj.hasOverseaTravelHis = this.userInfo.isTravel ? '1' : '0';
+                obj.isFeverSymptoms = this.userInfo.isFever ? '1' : '0';
+                obj.isCoughSymptoms = this.userInfo.isCough ? '1' : '0';
+                obj.isOtherSymptoms = this.userInfo.isOther ? '1' : '0';
+                obj.isVisitedHospital = this.userInfo.isSeeD ? '1' : '0';
+                obj.emergencyContact = this.userInfo.emergency;
+                obj.emergencyPhone = this.userInfo.emergencyPhone;
+                obj.purchaseTime = this.userInfo.buyTime;
+                let list = []
+                this.userInfo.drugName.map(i => {
+                    let arr = i.split('+');
+                    list.push({id: arr[0], name: arr[1]})
+                })
+                obj.drugList = list;
+                obj.storeContact = this.userInfo.storeManager;
+                obj.storeContactPhone = this.userInfo.storePhone;
+                obj.remark = this.userInfo.note;
+                obj.userAddress = this.userInfo.detailAddress;
+                let address1 = this.decryptCode(this.userInfo.area).split('/')
+                let address2 = this.isChangeStoreAddress ? this.decryptCode(this.userInfo.storeAddress).split('/') : this.placeholder.split('/')
+                obj.storeCode = this.userInfo.storeCode;
+                obj.storeName = this.userInfo.drugstore;
+                obj.province = address1[0]
+                obj.storeProvince = address1[0]
+                obj.city = address1[1]
+                obj.storeCity = address2[1]
+                if (address1.length > 2) {
+                    obj.county = address1[2]
+                }
+                if (address2.length > 2) {
+                    obj.storeCounty = address2[2]
+                }
 
+
+                this.axios({
+                    method: 'post',
+                    url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/saveDrug`,
+                    data: obj
+                }).then(res => {
+                    this.isSubmitForm = true;
+                    this.isSuccess = res.data.data.data >= 1
+                    this.isSumbiting = false;
+                })
             }
         }
     }
@@ -426,5 +543,9 @@
         z-index: 100;
         transform: translate(-50%, -50%);
         visibility: visible;
+    }
+
+    .el-checkbox {
+        display: block !important;
     }
 </style>

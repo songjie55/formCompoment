@@ -3,21 +3,25 @@
         <label>{{info.label}}<i v-if="isNecessary">*</i>
             <div class="arrow"></div>
         </label>
-        <div class="select">
-            <!--            :placeholder="info.placeholder"-->
-            <el-cascader :options="options" v-model="showValue" @change="changeValue">
+        <div class="select" :class="placeholder?'showD':''">
+            <el-cascader :placeholder="placeholder" :options="options" :value="address" @change="changeValue">
             </el-cascader>
         </div>
     </div>
 </template>
 
 <script>
-    import {regionData, CodeToText} from 'element-china-area-data'
+    import {regionData} from 'element-china-area-data'
 
     export default {
         name: "areaSelect",
         props: {
+            placeholder: null,
             info: null,
+            address: {
+                default: () => [],
+                type: Array
+            },
             isNecessary: {
                 default: false,
                 type: Boolean
@@ -29,19 +33,15 @@
         },
         data() {
             return {
-                showValue: '',
                 options: regionData,
             }
         },
         methods: {
             changeValue(value) {
-                this.showValue = value
-                let name = '';
-                this.showValue.map(item => name += CodeToText[item])
-                this.$emit('valChange', name)
-            },
-            clearValue() {
-
+                if (this.placeholder) {
+                    this.$emit('changeStoreAddress')
+                }
+                this.$emit('valChange', value)
             }
         }
     }
@@ -120,6 +120,14 @@
 
 
         }
+
+        .showD {
+            .el-cascader {
+                .el-input__inner::-webkit-input-placeholder {
+                    color: #333333 !important;
+                }
+            }
+        }
     }
 
     .el-cascader-menu {
@@ -130,4 +138,6 @@
     .el-cascader-node {
         padding: 0 !important;
     }
+
+
 </style>

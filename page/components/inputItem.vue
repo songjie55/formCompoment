@@ -3,7 +3,7 @@
         <label>{{info.label}}<i v-if="isNecessary">*</i>
             <slot name="label"></slot>
         </label>
-        <input :type="type" :value="value" :placeholder="info.placeholder" @input="changeValue">
+        <input :disabled="disabled" :type="type" :value="value" :placeholder="info.placeholder" @input="changeValue">
     </div>
 </template>
 
@@ -22,6 +22,10 @@
             },
             info: null,
             isNecessary: {
+                default: false,
+                type: Boolean
+            },
+            disabled:{
                 default: false,
                 type: Boolean
             }

@@ -2,8 +2,8 @@
     <div class="checkItem">
         <label>{{info.label}}</label>
         <ul>
-            <li :class="showValue?'active':''" @click="changeValue(true)">{{showType?'是':'有'}}</li>
-            <li :class="!showValue?'active':''" @click="changeValue(false)">{{showType?'否':'无'}}</li>
+            <li :class="showValue?'active':''" @click="changeValue(true)">{{showContent(showType)[0]}}</li>
+            <li :class="!showValue?'active':''" @click="changeValue(false)">{{showContent(showType)[1]}}</li>
         </ul>
     </div>
 </template>
@@ -21,8 +21,7 @@
                 type: Boolean
             },
             showType: {
-                default: true,
-                type: Boolean
+                default: 0
             }
         },
         data() {
@@ -31,6 +30,15 @@
             }
         },
         methods: {
+            showContent(type) {
+                if (type === 0) {
+                    return ['有', '无']
+                } else if(type===1){
+                    return ['是', '否']
+                }else{
+                    return ['男', '女']
+                }
+            },
             changeValue(value) {
                 this.showValue = value;
                 this.$emit('valChange', value)

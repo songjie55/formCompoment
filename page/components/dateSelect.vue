@@ -5,10 +5,10 @@
         </label>
         <div class="select dataSelect">
             <el-date-picker
-                    format="yyyy-MM-dd HH:mm:ss"
-                    value-format="yyyy-MM-dd HH:mm:ss"
+                    format="yyyy-MM-dd"
+                    value-format="yyyyMMdd"
                     v-model="showValue"
-                    type="datetime"
+                    type="date"
                     @change="changeValue"
                     :placeholder="info.placeholder">
             </el-date-picker>
