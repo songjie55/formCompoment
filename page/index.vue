@@ -128,7 +128,7 @@
                     isSeeD: {label: '是否到医院就诊'},
                     emergency: {label: '紧急联系人', placeholder: '请输入紧急联系人姓名'},
                     emergencyPhone: {label: '紧急联系人电话', placeholder: '请输入紧急联系人电话'},
-                    drugName: {label: '购买药品名称', placeholder: '请输入查询关键字(例如:批准文号+药名+制药公司+规格)'},
+                    drugName: {label: '购买药品名称', placeholder: '请输入关键字(例如:批准文号+药名+厂家+规格)'},
                     buyTime: {label: '购买时间', placeholder: '请输入购买时间'},
                     drugstore: {label: '药店名称', placeholder: '请输入药店名称'},
                     storeAddress: {label: '药店地址', placeholder: '请输入药店地址'},
@@ -208,20 +208,26 @@
             },
             getOptionArr(obj) {
                 if (obj) {
-                    let data = {drugNameChn: '', produceCompany: '', drugSpec: ''};
+                    let data = {regNumb: '', drugNameChn: '', produceCompany: '', drugSpec: ''};
                     if (obj.value.indexOf('+') > -1) {
                         let arr = obj.value.split('+');
+                        if (arr.length === 4) {
+                            data.regNumb = arr[0]
+                            data.drugNameChn = arr[1]
+                            data.produceCompany = arr[2]
+                            data.drugSpec = arr[3]
+                        }
                         if (arr.length === 3) {
-                            data.drugNameChn = arr[0]
-                            data.produceCompany = arr[1]
-                            data.drugSpec = arr[2]
+                            data.regNumb = arr[0]
+                            data.drugNameChn = arr[1]
+                            data.produceCompany = arr[2]
                         }
                         if (arr.length === 2) {
-                            data.drugNameChn = arr[0]
-                            data.produceCompany = arr[1]
+                            data.regNumb = arr[0]
+                            data.drugNameChn = arr[1]
                         }
                     } else {
-                        data.drugNameChn = obj.value;
+                        data.regNumb = obj.value;
                     }
                     this.axios({
                         method: 'post',
