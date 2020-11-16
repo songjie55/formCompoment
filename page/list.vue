@@ -1,19 +1,20 @@
 <template>
     <div class="container infinite-list-wrapper" style="overflow:auto;height: 100vh;">
         <header-search @startSearch="searchList"></header-search>
-        <ul class="infinite-list" v-infinite-scroll="loaderMore" infinite-scroll-disabled="disabled">
-            <li class="listItem" v-for="(item,index) in list" :key="index">
+        <ul class="infinite-list" v-infinite-scroll="loaderMore" infinite-scroll-disabled="disabled"
+            infinite-scroll-immediate="false">
+            <li class="listItem" v-for="(item,index) in list" :key="item.id">
                 <p class="firstLine">
-                    <span>用药者姓名</span><span>{{item.drugUserName}}</span><span>症状</span><span>{{item.sick}}</span>
+                    <span>用药者姓名</span><span>{{item.drugUserName}}</span><span>症状</span><span>{{getSick(item)}}</span>
                 </p>
                 <p><span>性别</span><span>{{item.userSex=='F'?'女':'男'}}</span></p>
-                <p><span>居住地址</span><span>{{item.address}}</span></p>
+                <p><span>居住地址</span><span>{{item.userAddress}}</span></p>
                 <p><span>联系电话</span>{{item.userPhone}}</p>
-                <p><span>用药者来源</span>{{item.from}}</p>
+                <p><span>用药者来源</span>{{getFrom(item)}}</p>
             </li>
         </ul>
         <p class="tip" v-if="loading">加载中...</p>
-        <p class="tip" v-if="noMore">没有更多了</p>
+        <p class="tip" v-if="noMore">{{list.length===0?'查无数据':'没有更多了'}}</p>
     </div>
 
 </template>
@@ -26,6 +27,7 @@
         name: "list",
         data() {
             return {
+                baseUrl: 'http://192.168.1.183',
                 loading: false,
                 disabled: false,
                 noMore: false,
@@ -41,33 +43,46 @@
             }
         },
         beforeMount() {
-            // this.loaderMore()
-            for (let i = 0; i < 20; i++) {
-                this.list.push({
-                    id: 1,
-                    drugUserName: '用户1',
-                    address: '地址123',
-                    sick: '无',
-                    userSex: 'F',
-                    userPhone: '12345678965',
-                    from: '地球'
-                })
-            }
+            this.loaderMore()
         },
         methods: {
+            getSick(item) {
+                let res = '无';
+                if (item.isCoughSymptoms !== '否') {
+                    res = '咳嗽'
+                } else if (item.isFeverSymptoms !== '否') {
+                    res = '发烧'
+                } else if (item.isOtherSymptoms !== '否') {
+                    res = '其他症状'
+                } else if (item.isVisitedHospital !== '否') {
+                    res = '到过医院就诊'
+                }
+                return res
+            },
+            getFrom(item) {
+                let res = '其他';
+                if (item.isCloseWithHighPeople !== '否') {
+                    res = '与来自中高风险地区人员密切接触'
+                } else if (item.isFromHighRisk !== '否') {
+                    res = '来自高风险地区'
+                } else if (item.isToHighRiskIn14 !== '否') {
+                    res = '14天内到过中高风险地区'
+                }
+                return res
+            },
             searchList(params) {
-                console.log(params)
-                this.searchForm = Object.assign({}, params)
+                this.searchForm = Object.assign({page: this.page}, params)
                 this.list = []
                 this.page = 1
                 this.loaderMore()
             },
             loaderMore() {
+                if (this.loading === true) return false//阻止多次加载
                 this.loading = true;
                 this.axios({
                     method: 'post',
                     url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/queryDrugsaleRegList`,
-                    data: this.searchForm
+                    data: Object.assign({page: this.page}, this.searchForm)
                 }).then(res => {
                     if (res.data.data.length > 0) {
                         this.list.push(...res.data.data)
@@ -81,18 +96,6 @@
                     console.log(e)
                     this.loading = false;
                 })
-                //
-                for (let i = 0; i < 20; i++) {
-                    this.list.push({
-                        id: 1,
-                        drugUserName: '用户1',
-                        address: '地址123',
-                        sick: '无',
-                        userSex: 'F',
-                        userPhone: '12345678965',
-                        from: '地球'
-                    })
-                }
             }
         }
     }
@@ -107,11 +110,13 @@
     ul {
         list-style: none;
     }
-    .tip{
+
+    .tip {
         font-size: .16rem;
         line-height: .3rem;
         text-align: center;
     }
+
     .listItem {
         width: 90%;
         padding: 2% 5%;

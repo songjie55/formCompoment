@@ -35,10 +35,10 @@
             return {
                 isShowForm: false,
                 searchForm: {
-                    drugUserName: '1',
-                    idCard: '2',
-                    purchaseTime: '3',
-                    drugNames: '4'
+                    drugUserName: '',
+                    idCard: '',
+                    purchaseTime: '',
+                    drugNames: ''
                 }
             }
         },

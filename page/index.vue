@@ -89,6 +89,7 @@
         components: {inputItem, selectItem, areaSelect, checkItem, dateSelect},
         data() {
             return {
+                baseUrl: 'http://192.168.1.183',
                 placeholder: '',
                 isChangeStoreAddress: false,
                 isError: false,
@@ -127,7 +128,7 @@
                     isSeeD: {label: '是否到医院就诊'},
                     emergency: {label: '紧急联系人', placeholder: '请输入紧急联系人姓名'},
                     emergencyPhone: {label: '紧急联系人电话', placeholder: '请输入紧急联系人电话'},
-                    drugName: {label: '购买药品名称', placeholder: '请输入模糊查询关键字(例如:药名+制药公司+规格)'},
+                    drugName: {label: '购买药品名称', placeholder: '请输入查询关键字(例如:批准文号+药名+制药公司+规格)'},
                     buyTime: {label: '购买时间', placeholder: '请输入购买时间'},
                     drugstore: {label: '药店名称', placeholder: '请输入药店名称'},
                     storeAddress: {label: '药店地址', placeholder: '请输入药店地址'},
@@ -389,7 +390,6 @@
                 if (address2.length > 2) {
                     obj.storeCounty = address2[2]
                 }
-
 
                 this.axios({
                     method: 'post',

@@ -78,11 +78,11 @@ module.exports = {
             },
             {
                 test: /\.vue$/,
-                use: 'vue-loader'
+                use: ['cache-loader','vue-loader']
             }
         ]
     },
-    devtool: process.env.MODE === 'development' ? 'source-map' : 'eval',
+    devtool: process.env.MODE === 'development' ? 'hidden-source-map' : 'cheap-module-eval-source-map',
     optimization: {
         minimizer: miniArr,
         splitChunks: {
