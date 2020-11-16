@@ -48,7 +48,7 @@
         },
         methods: {
             goDetail(id) {
-                window.location.href = `${this.baseUrl}/mspWechat/wechat/index.html#?id=${id}`
+                window.location.href = `${this.baseUrl}/mspWechat/wechat/dist/index.html?id=${id}`
             },
             getSick(item) {
                 let res = '无';

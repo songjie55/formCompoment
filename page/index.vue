@@ -25,7 +25,8 @@
                          v-model="userInfo.area"></area-select>
             <input-item :disabled="isShowDetail" :info="formInfo.userAddress" :is-necessary="!isShowDetail"
                         v-model="userInfo.userAddress"></input-item>
-            <check-item :disabled="isShowDetail" :info="formInfo.userSex" v-model="userInfo.userSex" :show-type="2"></check-item>
+            <check-item :disabled="isShowDetail" :info="formInfo.userSex" v-model="userInfo.userSex"
+                        :show-type="2"></check-item>
         </div>
         <div class="formItem">
             <h4>用药者来源情况<i>*</i></h4>
@@ -35,7 +36,8 @@
                 <el-checkbox :disabled="isNotOther" label="3">与来自中高风险地区人员密切接触</el-checkbox>
                 <el-checkbox :disabled="isOther" label="4">其他</el-checkbox>
             </el-checkbox-group>
-            <check-item :disabled="isShowDetail" :info="formInfo.isTravel" v-model="userInfo.isTravel" :show-type="1"></check-item>
+            <check-item :disabled="isShowDetail" :info="formInfo.isTravel" v-model="userInfo.isTravel"
+                        :show-type="1"></check-item>
         </div>
         <div class="formItem">
             <h4>症状<i>*</i></h4>
@@ -201,7 +203,7 @@
                 let resArr = JSON.parse(JSON.stringify(regionData.filter(i => i.label === '福建省')))
                 resArr[0].children = resArr[0].children.filter(i => i.label === '福州市')
                 this.fuzhouOptions = resArr;
-                this.userInfo.area="";
+                this.userInfo.area = "";
                 //获取药店信息
                 this.getStoreDetail()
             }
@@ -231,7 +233,12 @@
                         if (data.isToHighRiskIn14 === '是') this.userInfo.from.push('2')
                         if (data.isCloseWithHighPeople === '是') this.userInfo.from.push('3')
                         if (data.isOtherSource === '是') this.userInfo.from.push('4')
-                        this.isOther = data.isOtherSource === '是';
+                        if (data.isOtherSource === '是' || data.isFromHighRisk === '是' || data.isToHighRiskIn14 === '是' || data.isCloseWithHighPeople === '是') {
+                            this.isOther = false;
+                        }
+                        if (data.isOtherSource === '是') {
+                            this.isOther = true;
+                        }
                         this.userInfo.isCough = data.isCoughSymptoms === '是';
                         this.userInfo.isFever = data.isFeverSymptoms === '是';
                         this.userInfo.isSeeD = data.isVisitedHospital === '是';
