@@ -107,7 +107,7 @@
         data() {
             return {
                 baseUrl: 'http://192.168.1.183',
-                placeholder1: '',
+                placeholder1: '请选择地址',
                 placeholder: '',
                 isChangeStoreAddress: false,
                 isError: false,
