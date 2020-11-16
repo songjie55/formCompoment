@@ -3,7 +3,7 @@
         <header-search @startSearch="searchList"></header-search>
         <ul class="infinite-list" v-infinite-scroll="loaderMore" infinite-scroll-disabled="disabled"
             infinite-scroll-immediate="false">
-            <li class="listItem" v-for="(item,index) in list" :key="item.id">
+            <li class="listItem" v-for="(item,index) in list" :key="item.id" @click="goDetail(item.id)">
                 <p class="firstLine">
                     <span style="font-size: .16rem;color: #2e2e2e;">{{item.drugUserName}}</span>
                     症状:{{getSick(item)}}
@@ -47,6 +47,9 @@
             this.loaderMore()
         },
         methods: {
+            goDetail(id) {
+                window.location.href = `${this.baseUrl}/mspWechat/wechat/index.html#?id=${id}`
+            },
             getSick(item) {
                 let res = '无';
                 if (item.isCoughSymptoms !== '否') {
@@ -72,9 +75,9 @@
                 return res
             },
             searchList(params) {
-                this.searchForm = Object.assign({pageNum: String(this.page)}, params)
                 this.list = []
                 this.page = 1
+                this.searchForm = Object.assign({pageNum: String(this.page)}, params)
                 this.loaderMore()
             },
             loaderMore() {

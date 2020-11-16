@@ -2,23 +2,29 @@
     <div class="contain">
         <div class="formItem">
             <h4>个人信息</h4>
-            <input-item :info="formInfo.name" is-necessary v-model="userInfo.name"></input-item>
-            <select-item :info="formInfo.certificates" v-model="userInfo.certificatesType" :option-arr="optionArr"
-                         is-necessary></select-item>
-            <input-item :info="formInfo.certificatesNumber" v-model="userInfo.certificatesNumber"
-                        is-necessary></input-item>
-            <input-item type="number" :info="formInfo.age" v-model="userInfo.age" is-necessary></input-item>
-            <input-item type="number" :info="formInfo.tel" v-model="userInfo.tel" is-necessary>
+            <input-item :disabled="isShowDetail" :info="formInfo.drugUserName" :is-necessary="!isShowDetail"
+                        v-model="userInfo.drugUserName"></input-item>
+            <select-item v-if="!isShowDetail" :info="formInfo.certificates" v-model="userInfo.certificatesType"
+                         :option-arr="optionArr"
+                         :is-necessary="!isShowDetail"></select-item>
+            <input-item :disabled="isShowDetail" :info="formInfo.idCard" v-model="userInfo.idCard"
+                        :is-necessary="!isShowDetail"></input-item>
+            <input-item :disabled="isShowDetail" type="number" :info="formInfo.userAge" v-model="userInfo.userAge"
+                        :is-necessary="!isShowDetail"></input-item>
+            <input-item :disabled="isShowDetail" type="number" :info="formInfo.userPhone" v-model="userInfo.userPhone"
+                        :is-necessary="!isShowDetail">
                 <template v-slot:label>
                     <div class="whosePhone">
-                        <span :class="isUser?'active':''" @click="isUser=true">用药者本人</span>
-                        <span :class="!isUser?'active':''" @click="isUser=false">购药者</span>
+                        <span :class="isUser?'active':''" @click="changePhoneType()">用药者本人</span>
+                        <span :class="!isUser?'active':''" @click="changePhoneType(false)">购药者</span>
                     </div>
                 </template>
             </input-item>
-            <area-select :options="isUser?fuzhouOptions:optionsArr1" :info="formInfo.area" is-necessary
+            <area-select :disabled="isShowDetail" :options="isUser?fuzhouOptions:optionsArr1" :info="formInfo.area"
+                         :is-necessary="!isShowDetail" :placeholder="placeholder1"
                          v-model="userInfo.area"></area-select>
-            <input-item :info="formInfo.detailAddress" is-necessary v-model="userInfo.detailAddress"></input-item>
+            <input-item :disabled="isShowDetail" :info="formInfo.userAddress" :is-necessary="!isShowDetail"
+                        v-model="userInfo.userAddress"></input-item>
             <check-item :info="formInfo.userSex" v-model="userInfo.userSex" :show-type="2"></check-item>
         </div>
         <div class="formItem">
@@ -40,30 +46,40 @@
         </div>
         <div class="formItem">
             <h4>紧急联系人</h4>
-            <input-item :info="formInfo.emergency" is-necessary v-model="userInfo.emergency"></input-item>
-            <input-item :info="formInfo.emergencyPhone" is-necessary v-model="userInfo.emergencyPhone"
+            <input-item :disabled="isShowDetail" :info="formInfo.emergencyContact" :is-necessary="!isShowDetail"
+                        v-model="userInfo.emergencyContact"></input-item>
+            <input-item :disabled="isShowDetail" :info="formInfo.emergencyPhone" :is-necessary="!isShowDetail"
+                        v-model="userInfo.emergencyPhone"
                         type="number"></input-item>
         </div>
         <div class="formItem">
             <h4>购药信息</h4>
-            <select-item :info="formInfo.drugName" value-property="id" :is-mulitple="true" show-property="drugNameChn"
+            <select-item :info="formInfo.drugNames" value-property="id" :is-mulitple="true" show-property="drugNameChn"
                          @getOptions="getOptionArr"
-                         v-model="userInfo.drugName"
+                         v-model="userInfo.drugNames"
                          :option-arr="drugArr"
-                         is-search is-necessary></select-item>
-            <date-select :info="formInfo.buyTime" is-necessary v-model="userInfo.buyTime"></date-select>
-            <input-item :disabled="true" :info="formInfo.drugstore" is-necessary
-                        v-model="userInfo.drugstore"></input-item>
-            <area-select :options="optionsArr1" :placeholder="placeholder" :info="formInfo.storeAddress" is-necessary
+                         :disabled="isShowDetail"
+                         is-search :is-necessary="!isShowDetail"></select-item>
+            <date-select :disabled="isShowDetail" :info="formInfo.purchaseTime" :is-necessary="!isShowDetail"
+                         v-model="userInfo.purchaseTime"></date-select>
+            <input-item :disabled="true" :info="formInfo.storeName" :is-necessary="!isShowDetail"
+                        v-model="userInfo.storeName"></input-item>
+            <area-select :disabled="isShowDetail" :options="optionsArr1" :placeholder="placeholder"
+                         :info="formInfo.storeAddress"
+                         :is-necessary="!isShowDetail"
                          @changeStoreAddress="isChangeStoreAddress=true"
                          v-model="userInfo.storeAddress"></area-select>
-            <input-item :info="formInfo.storeAddressDetail" is-necessary
+            <input-item :disabled="isShowDetail" :info="formInfo.storeAddressDetail" :is-necessary="!isShowDetail"
                         v-model="userInfo.storeAddressDetail"></input-item>
-            <input-item :info="formInfo.storeManager" is-necessary v-model="userInfo.storeManager"></input-item>
-            <input-item type="number" :info="formInfo.storePhone" is-necessary
-                        v-model="userInfo.storePhone"></input-item>
-            <input-item :info="formInfo.note" v-model="userInfo.note"></input-item>
-            <button :disabled="isSumbiting" class="submitBtn" @click="validateForm">{{isSumbiting?'提交中':'提交'}}</button>
+            <input-item :disabled="isShowDetail" :info="formInfo.storeContact" :is-necessary="!isShowDetail"
+                        v-model="userInfo.storeContact"></input-item>
+            <input-item :disabled="isShowDetail" type="number" :info="formInfo.storeContactPhone"
+                        :is-necessary="!isShowDetail"
+                        v-model="userInfo.storeContactPhone"></input-item>
+            <input-item :disabled="isShowDetail" :info="formInfo.remark" v-model="userInfo.remark"></input-item>
+            <button v-if="!isShowDetail" :disabled="isSumbiting" class="submitBtn" @click="validateForm">
+                {{isSumbiting?'提交中':'提交'}}
+            </button>
         </div>
         <div v-if="isSubmitForm" class="resultBox">
             <img :src="isSuccess?sucImg:failImg" alt="">
@@ -91,6 +107,7 @@
         data() {
             return {
                 baseUrl: 'http://192.168.1.183',
+                placeholder1: '',
                 placeholder: '',
                 isChangeStoreAddress: false,
                 isError: false,
@@ -98,6 +115,7 @@
                 errorMsg: '错误提示语',
                 isNotOther: false,
                 isOther: false,
+                isShowDetail: false,
                 isUser: true,
                 sucImg: require("../static/success.jpg"),
                 failImg: require("../static/fail.jpg"),
@@ -116,56 +134,56 @@
                 drugArr: [],
                 storeArr: [],
                 formInfo: {
-                    name: {label: '用药者姓名', placeholder: '请输入用药者姓名'},
+                    drugUserName: {label: '用药者姓名', placeholder: '请输入用药者姓名'},
                     certificates: {label: '用药者证件', placeholder: '请选择'},
                     area: {label: '目前居住地址', placeholder: '请选择地址'},
-                    certificatesNumber: {label: '证件号码', placeholder: '请输入用药者证件号码'},
-                    age: {label: '年龄', placeholder: '请输入用药者的年龄'},
-                    tel: {label: '联系电话', placeholder: '请输入联系电话(手机)'},
-                    detailAddress: {label: '详细地址', placeholder: '请输入详细地址'},
+                    idCard: {label: '证件号码', placeholder: '请输入用药者证件号码'},
+                    userAge: {label: '年龄', placeholder: '请输入用药者的年龄'},
+                    userPhone: {label: '联系电话', placeholder: '请输入联系电话(手机)'},
+                    userAddress: {label: '详细地址', placeholder: '请输入详细地址'},
                     userSex: {label: '性别'},
                     isTravel: {label: '境外旅居史'},
                     isFever: {label: '发烧'},
                     isCough: {label: '咳嗽'},
                     isOther: {label: '其他'},
                     isSeeD: {label: '是否到医院就诊'},
-                    emergency: {label: '紧急联系人', placeholder: '请输入紧急联系人姓名'},
+                    emergencyContact: {label: '紧急联系人', placeholder: '请输入紧急联系人姓名'},
                     emergencyPhone: {label: '紧急联系人电话', placeholder: '请输入紧急联系人电话'},
-                    drugName: {label: '购买药品名称', placeholder: '请输入关键字(例如:批准文号+药名+厂家+规格)'},
-                    buyTime: {label: '购买时间', placeholder: '请输入购买时间'},
-                    drugstore: {label: '药店名称', placeholder: '请输入药店名称'},
+                    drugNames: {label: '购买药品名称', placeholder: '请输入关键字(例如:批准文号+药名+厂家+规格)'},
+                    purchaseTime: {label: '购买时间', placeholder: '请输入购买时间'},
+                    storeName: {label: '药店名称', placeholder: '请输入药店名称'},
                     storeAddress: {label: '药店地址', placeholder: '请选择药店地址'},
                     storeAddressDetail: {label: '药店详细地址', placeholder: '请输入药店详细地址'},
-                    storeManager: {label: '药店联系人', placeholder: '请输入药店联系人'},
-                    storePhone: {label: '药店联系人电话', placeholder: '请输入药店联系人电话'},
-                    note: {label: '备注', placeholder: '备注信息'},
+                    storeContact: {label: '药店联系人', placeholder: '请输入药店联系人'},
+                    storeContactPhone: {label: '药店联系人电话', placeholder: '请输入药店联系人电话'},
+                    remark: {label: '备注', placeholder: '备注信息'},
                 },
                 userInfo: {
-                    name: null,
+                    drugUserName: null,
                     from: [],
                     certificatesType: null,
-                    certificatesNumber: '',
-                    age: '',
+                    idCard: '',
+                    userAge: '',
                     area: '',
-                    tel: '',
-                    detailAddress: '',
+                    userPhone: '',
+                    userAddress: '',
                     userSex: false,
                     isTravel: false,
                     isFever: false,
                     isCough: false,
                     isOther: false,
                     isSeeD: false,
-                    emergency: '',
+                    emergencyContact: '',
                     emergencyPhone: '',
-                    drugName: null,
-                    buyTime: null,
-                    drugstore: null,
+                    drugNames: null,
+                    purchaseTime: null,
+                    storeName: null,
                     storeCode: '',
                     storeAddress: [],
                     storeAddressDetail: '',
-                    storeManager: '',
-                    storePhone: '',
-                    note: '',
+                    storeContact: '',
+                    storeContactPhone: '',
+                    remark: '',
                 }
             }
         },
@@ -175,13 +193,49 @@
             }
         },
         mounted() {
-            let resArr = JSON.parse(JSON.stringify(regionData.filter(i => i.label === '福建省')))
-            resArr[0].children = resArr[0].children.filter(i => i.label === '福州市')
-            this.fuzhouOptions = resArr;
-            //获取药店信息
-            this.getStoreDetail()
+            if (window.location.href.indexOf('?') > -1) {
+                this.isShowDetail = true;
+                let id = window.location.href.split('?')[1].split('=')[1];
+                console.log(id)
+                //614b0208c22a4f879764b2e63184f09e
+                this.searchDetail(id)
+            } else {
+                let resArr = JSON.parse(JSON.stringify(regionData.filter(i => i.label === '福建省')))
+                resArr[0].children = resArr[0].children.filter(i => i.label === '福州市')
+                this.fuzhouOptions = resArr;
+                //获取药店信息
+                this.getStoreDetail()
+            }
+
         },
         methods: {
+            changePhoneType(type = true) {
+                if (this.isShowDetail) return false
+                this.isUser = type;
+            },
+            searchDetail(id) {
+                this.axios({
+                    method: 'post',
+                    url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/queryDrugsaleRegList`,
+                    data: {id: id, pageNum: '1'}
+                }).then(res => {
+                    let data = res.data.data[0]
+                    console.log(data)
+                    this.isUser = data.isUserPhone === '1'
+                    this.userInfo = Object.assign(this.userInfo, data)
+                    this.placeholder = [data.storeProvince, data.storeCity, data.storeCounty].join('/');
+                    this.userInfo.storeAddressDetail = data.storeAddress;
+                    this.placeholder1 = [data.province, data.city, data.county].join('/');
+                    this.$nextTick(() => {
+                        this.formInfo.drugNames.placeholder = this.userInfo.drugNames;
+                        this.userInfo.userSex = data.userSex === '男'
+                        this.userInfo.isTravel = data.hasOverseaTravelHis === '有';
+                    })
+
+                }).catch((e) => {
+                    console.log(e)
+                })
+            },
             changeFrom() {
                 if (this.userInfo.from.length > 0) {
                     if (this.userInfo.from.find(i => i === '4')) {
@@ -211,7 +265,7 @@
                     url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/quenyCompNameToCompany`,
                 }).then(res => {
                     let data = res.data.data
-                    this.userInfo.drugstore = data.compName;
+                    this.userInfo.storeName = data.compName;
                     this.userInfo.storeCode = data.storeCode;
                     this.placeholder = [data.storeProvince, data.storeCity, data.storeCounty].join('/');
                     this.userInfo.storeAddressDetail = data.storeAddress;
@@ -238,6 +292,7 @@
                             data.drugNameChn = arr[1]
                         }
                     } else {
+                        if (obj.value.length < 8) return false;
                         data.regNumb = obj.value;
                     }
                     this.axios({
@@ -258,7 +313,7 @@
                     return false;
                 }
                 const descriptor = {
-                    name: {
+                    drugUserName: {
                         type: 'string',
                         required: true,
                         Pattern: /\S/g,
@@ -269,16 +324,16 @@
                         message: '请选择证件类型',
                         validator: (rule, value) => value !== null && value !== ''
                     },
-                    certificatesNumber: {
+                    idCard: {
                         required: true,
                         message: '请输入正确证件号码',
                         Pattern: /\S/g
                     },
-                    age: {
+                    userAge: {
                         required: true,
                         message: '请输入正确年龄',
                     },
-                    tel: {
+                    userPhone: {
                         required: true,
                         message: '请输入正确联系电话',
                         validator: (rule, value) => {
@@ -290,7 +345,7 @@
                         message: '请选择居住地区域',
                         validator: (rule, value) => value !== null && value !== ''
                     },
-                    detailAddress: {
+                    userAddress: {
                         type: 'string',
                         required: true,
                         Pattern: /\S/g,
@@ -301,7 +356,7 @@
                         message: '请选择来源情况',
                         validator: (rule, value) => value !== null && value !== ''
                     },
-                    emergency: {
+                    emergencyContact: {
                         type: 'string',
                         required: true,
                         Pattern: /\S/g,
@@ -314,17 +369,17 @@
                             return /^1(3|4|5|6|7|8|9)\d{9}$/.test(value)
                         }
                     },
-                    drugName: {
+                    drugNames: {
                         required: true,
                         message: '请选择购买药品名称',
                         validator: (rule, value) => value !== null && value !== ''
                     },
-                    buyTime: {
+                    purchaseTime: {
                         required: true,
                         message: '请选择购药时间',
                         validator: (rule, value) => value !== null && value !== ''
                     },
-                    drugstore: {
+                    storeName: {
                         required: true,
                         message: '请选择药店名称',
                         validator: (rule, value) => value !== null && value !== ''
@@ -340,13 +395,13 @@
                         Pattern: /\S/g,
                         message: '请输入药店详细地址'
                     },
-                    storeManager: {
+                    storeContact: {
                         type: 'string',
                         required: true,
                         Pattern: /\S/g,
                         message: '请输入药店联系人姓名'
                     },
-                    storePhone: {
+                    storeContactPhone: {
                         required: true,
                         message: '请输入药店联系人联系电话',
                         validator: (rule, value) => {
@@ -363,13 +418,16 @@
                 })
             },
             postForm() {
+                if (this.isShowDetail) {
+                    return false;
+                }
                 this.isSumbiting = true;
                 let obj = {};
-                obj.drugUserName = this.userInfo.name;
-                obj.idCard = this.userInfo.certificatesNumber;
-                obj.userAge = this.userInfo.age;
+                obj.drugUserName = this.userInfo.drugUserName;
+                obj.idCard = this.userInfo.idCard;
+                obj.userAge = this.userInfo.userAge;
                 obj.userSex = this.userInfo.userSex ? 'F' : 'M';
-                obj.userPhone = this.userInfo.tel;
+                obj.userPhone = this.userInfo.userPhone;
                 obj.isUserPhone = this.isUser ? 1 : 0;
                 obj.isFromHighRisk = this.userInfo.from.find(i => i === '1') !== undefined ? 1 : 0;
                 obj.isCloseWithHighPeople = this.userInfo.from.find(i => i === '3') !== undefined ? 1 : 0;
@@ -380,19 +438,19 @@
                 obj.isCoughSymptoms = this.userInfo.isCough ? '1' : '0';
                 obj.isOtherSymptoms = this.userInfo.isOther ? '1' : '0';
                 obj.isVisitedHospital = this.userInfo.isSeeD ? '1' : '0';
-                obj.emergencyContact = this.userInfo.emergency;
+                obj.emergencyContact = this.userInfo.emergencyContact;
                 obj.emergencyPhone = this.userInfo.emergencyPhone;
-                obj.purchaseTime = this.userInfo.buyTime;
+                obj.purchaseTime = this.userInfo.purchaseTime;
                 let list = []
-                this.userInfo.drugName.map(i => {
+                this.userInfo.drugNames.map(i => {
                     let arr = i.split('+');
                     list.push({id: arr[0], name: arr[1]})
                 })
                 obj.drugList = list;
-                obj.storeContact = this.userInfo.storeManager;
-                obj.storeContactPhone = this.userInfo.storePhone;
-                obj.remark = this.userInfo.note;
-                obj.userAddress = this.userInfo.detailAddress;
+                obj.storeContact = this.userInfo.storeContact;
+                obj.storeContactPhone = this.userInfo.storeContactPhone;
+                obj.remark = this.userInfo.remark;
+                obj.userAddress = this.userInfo.userAddress;
                 obj.storeAddress = this.userInfo.storeAddressDetail;
                 obj.provinceCode = this.userInfo.area[0];
                 obj.cityCode = this.userInfo.area[1];
@@ -400,7 +458,7 @@
                 let address1 = this.decryptCode(this.userInfo.area).split('/')
                 let address2 = this.isChangeStoreAddress ? this.decryptCode(this.userInfo.storeAddress).split('/') : this.placeholder.split('/')
                 obj.storeCode = this.userInfo.storeCode;
-                obj.storeName = this.userInfo.drugstore;
+                obj.storeName = this.userInfo.storeName;
                 obj.province = address1[0]
                 obj.storeProvince = address2[0]
                 obj.city = address1[1]

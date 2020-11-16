@@ -4,7 +4,7 @@
             <div class="arrow"></div>
         </label>
         <div class="select" :class="placeholder?'showD':''">
-            <el-cascader :placeholder="placeholder" :options="options" :value="address" @change="changeValue">
+            <el-cascader :disabled="disabled" :placeholder="placeholder" :options="options" :value="address" @change="changeValue">
             </el-cascader>
         </div>
     </div>
@@ -26,6 +26,10 @@
                 type: Array
             },
             isNecessary: {
+                default: false,
+                type: Boolean
+            },
+            disabled: {
                 default: false,
                 type: Boolean
             }

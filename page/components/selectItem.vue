@@ -5,6 +5,7 @@
         </label>
         <div class="select">
             <el-select :remote="isSearch"
+                       :disabled="disabled"
                        :multiple="isMulitple"
                        :remote-method="getOptionArr"
                        :loading="loading&&isSearch"
@@ -56,6 +57,10 @@
             showProperty: {
                 default: 'label',
                 type: String
+            },
+            disabled: {
+                default: false,
+                type: Boolean
             },
             isSearch: {
                 default: false,

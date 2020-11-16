@@ -5,9 +5,10 @@
         </label>
         <div class="select dataSelect">
             <el-date-picker
+                    :disabled="disabled"
                     format="yyyy-MM-dd"
                     value-format="yyyyMMdd"
-                    v-model="showValue"
+                    :value="value"
                     type="date"
                     @change="changeValue"
                     :placeholder="info.placeholder">
@@ -25,15 +26,15 @@
             event: 'valChange'
         },
         props: {
+            disabled: {
+                default: false,
+                type: Boolean
+            },
+            value: '',
             info: null,
             isNecessary: {
                 default: false,
                 type: Boolean
-            }
-        },
-        data() {
-            return {
-                showValue: ''
             }
         },
         methods: {
