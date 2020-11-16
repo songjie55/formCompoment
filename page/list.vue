@@ -5,10 +5,11 @@
             infinite-scroll-immediate="false">
             <li class="listItem" v-for="(item,index) in list" :key="item.id">
                 <p class="firstLine">
-                    <span>用药者姓名</span><span>{{item.drugUserName}}</span><span>症状</span><span>{{getSick(item)}}</span>
+                    <span style="font-size: .16rem;color: #2e2e2e;">{{item.drugUserName}}</span>
+                    症状:{{getSick(item)}}
                 </p>
-                <p><span>性别</span><span>{{item.userSex=='F'?'女':'男'}}</span></p>
-                <p><span>居住地址</span><span>{{item.userAddress}}</span></p>
+                <p><span>性别</span>{{item.userSex=='F'?'女':'男'}}</p>
+                <p><span>居住地址</span>{{item.userAddress}}</p>
                 <p><span>联系电话</span>{{item.userPhone}}</p>
                 <p><span>用药者来源</span>{{getFrom(item)}}</p>
             </li>
@@ -71,7 +72,7 @@
                 return res
             },
             searchList(params) {
-                this.searchForm = Object.assign({page: this.page}, params)
+                this.searchForm = Object.assign({pageNum: String(this.page)}, params)
                 this.list = []
                 this.page = 1
                 this.loaderMore()
@@ -82,7 +83,7 @@
                 this.axios({
                     method: 'post',
                     url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/queryDrugsaleRegList`,
-                    data: Object.assign({page: this.page}, this.searchForm)
+                    data: Object.assign({pageNum: String(this.page)}, this.searchForm)
                 }).then(res => {
                     if (res.data.data.length > 0) {
                         this.list.push(...res.data.data)
@@ -108,6 +109,7 @@
     }
 
     ul {
+        padding-top: .15rem;
         list-style: none;
     }
 
@@ -129,8 +131,12 @@
 
         p {
             line-height: .25rem;
+            text-align: right;
+            color: #333333;
 
             span {
+                color: #B3B3B3;
+                text-align: left;
                 display: block;
                 float: left;
                 width: 70%;
@@ -151,9 +157,8 @@
         }
 
         .firstLine {
-            span:nth-child(n+2) {
-                width: 23%;
-            }
+            color: #0b9be3;
+            font-size: .12rem;
         }
 
     }
