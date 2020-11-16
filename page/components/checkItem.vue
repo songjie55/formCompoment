@@ -16,7 +16,11 @@
             event: 'valChange'
         },
         props: {
-            value:false,
+            disabled: {
+                value: false,
+                type: Boolean
+            },
+            value: false,
             info: null,
             isTravel: {
                 type: Boolean
@@ -25,22 +29,18 @@
                 default: 0
             }
         },
-        data() {
-            return {
-                showValue: false
-            }
-        },
         methods: {
             showContent(type) {
                 if (type === 0) {
                     return ['有', '无']
-                } else if(type===1){
+                } else if (type === 1) {
                     return ['是', '否']
-                }else{
+                } else {
                     return ['男', '女']
                 }
             },
             changeValue(value) {
+                if (this.disabled) return false;
                 this.$emit('valChange', value)
             }
         }

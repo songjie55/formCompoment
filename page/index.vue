@@ -25,7 +25,7 @@
                          v-model="userInfo.area"></area-select>
             <input-item :disabled="isShowDetail" :info="formInfo.userAddress" :is-necessary="!isShowDetail"
                         v-model="userInfo.userAddress"></input-item>
-            <check-item :info="formInfo.userSex" v-model="userInfo.userSex" :show-type="2"></check-item>
+            <check-item :disabled="isShowDetail" :info="formInfo.userSex" v-model="userInfo.userSex" :show-type="2"></check-item>
         </div>
         <div class="formItem">
             <h4>用药者来源情况<i>*</i></h4>
@@ -35,14 +35,14 @@
                 <el-checkbox :disabled="isNotOther" label="3">与来自中高风险地区人员密切接触</el-checkbox>
                 <el-checkbox :disabled="isOther" label="4">其他</el-checkbox>
             </el-checkbox-group>
-            <check-item :info="formInfo.isTravel" v-model="userInfo.isTravel" :show-type="1"></check-item>
+            <check-item :disabled="isShowDetail" :info="formInfo.isTravel" v-model="userInfo.isTravel" :show-type="1"></check-item>
         </div>
         <div class="formItem">
             <h4>症状<i>*</i></h4>
-            <check-item :info="formInfo.isFever" v-model="userInfo.isFever"></check-item>
-            <check-item :info="formInfo.isCough" v-model="userInfo.isCough"></check-item>
-            <check-item :info="formInfo.isOther" v-model="userInfo.isOther"></check-item>
-            <check-item :info="formInfo.isSeeD" v-model="userInfo.isSeeD"></check-item>
+            <check-item :disabled="isShowDetail" :info="formInfo.isFever" v-model="userInfo.isFever"></check-item>
+            <check-item :disabled="isShowDetail" :info="formInfo.isCough" v-model="userInfo.isCough"></check-item>
+            <check-item :disabled="isShowDetail" :info="formInfo.isOther" v-model="userInfo.isOther"></check-item>
+            <check-item :disabled="isShowDetail" :info="formInfo.isSeeD" v-model="userInfo.isSeeD"></check-item>
         </div>
         <div class="formItem">
             <h4>紧急联系人</h4>
@@ -196,13 +196,12 @@
             if (window.location.href.indexOf('?') > -1) {
                 this.isShowDetail = true;
                 let id = window.location.href.split('?')[1].split('=')[1];
-                console.log(id)
-                //614b0208c22a4f879764b2e63184f09e
                 this.searchDetail(id)
             } else {
                 let resArr = JSON.parse(JSON.stringify(regionData.filter(i => i.label === '福建省')))
                 resArr[0].children = resArr[0].children.filter(i => i.label === '福州市')
                 this.fuzhouOptions = resArr;
+                this.userInfo.area="";
                 //获取药店信息
                 this.getStoreDetail()
             }
@@ -227,6 +226,16 @@
                     this.userInfo.storeAddressDetail = data.storeAddress;
                     this.placeholder1 = [data.province, data.city, data.county].join('/');
                     this.$nextTick(() => {
+                        this.userInfo.from = [];
+                        if (data.isFromHighRisk === '是') this.userInfo.from.push('1')
+                        if (data.isToHighRiskIn14 === '是') this.userInfo.from.push('2')
+                        if (data.isCloseWithHighPeople === '是') this.userInfo.from.push('3')
+                        if (data.isOtherSource === '是') this.userInfo.from.push('4')
+                        this.isOther = data.isOtherSource === '是';
+                        this.userInfo.isCough = data.isCoughSymptoms === '是';
+                        this.userInfo.isFever = data.isFeverSymptoms === '是';
+                        this.userInfo.isSeeD = data.isVisitedHospital === '是';
+                        this.userInfo.isOther = data.isOtherSymptoms === '是';
                         this.formInfo.drugNames.placeholder = this.userInfo.drugNames;
                         this.userInfo.userSex = data.userSex === '男'
                         this.userInfo.isTravel = data.hasOverseaTravelHis === '有';
