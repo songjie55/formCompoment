@@ -37,6 +37,12 @@ module.exports = {
                             }
                         },
                         plugins: [
+                            // [
+                            //     "element-ui",
+                            //     {
+                            //         "module": false
+                            //     }
+                            // ],
                             [require("@babel/plugin-proposal-decorators"), {"legacy": true}]
                         ]
                     }
@@ -78,7 +84,7 @@ module.exports = {
             },
             {
                 test: /\.vue$/,
-                use: ['cache-loader','vue-loader']
+                use: ['cache-loader', 'vue-loader']
             }
         ]
     },

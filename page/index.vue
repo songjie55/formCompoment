@@ -16,7 +16,8 @@
                     </div>
                 </template>
             </input-item>
-            <area-select :info="formInfo.area" is-necessary v-model="userInfo.area"></area-select>
+            <area-select :options="isUser?fuzhouOptions:optionsArr1" :info="formInfo.area" is-necessary
+                         v-model="userInfo.area"></area-select>
             <input-item :info="formInfo.detailAddress" is-necessary v-model="userInfo.detailAddress"></input-item>
             <check-item :info="formInfo.userSex" v-model="userInfo.userSex" :show-type="2"></check-item>
         </div>
@@ -53,7 +54,7 @@
             <date-select :info="formInfo.buyTime" is-necessary v-model="userInfo.buyTime"></date-select>
             <input-item :disabled="true" :info="formInfo.drugstore" is-necessary
                         v-model="userInfo.drugstore"></input-item>
-            <area-select :placeholder="placeholder" :info="formInfo.storeAddress" is-necessary
+            <area-select :options="optionsArr1" :placeholder="placeholder" :info="formInfo.storeAddress" is-necessary
                          @changeStoreAddress="isChangeStoreAddress=true"
                          v-model="userInfo.storeAddress"></area-select>
             <input-item :info="formInfo.storeAddressDetail" is-necessary
@@ -82,7 +83,7 @@
     import checkItem from "./components/checkItem";
     import dateSelect from "./components/dateSelect";
     import Schema from 'async-validator'
-    import {CodeToText} from 'element-china-area-data'
+    import {CodeToText, regionData} from 'element-china-area-data'
 
     export default {
         name: "index",
@@ -110,6 +111,8 @@
                     {label: '驾驶证', value: 5},
                     {label: '港澳居民来往内地通行证', value: 6}
                 ],
+                fuzhouOptions: [{label: '', children: [], value: '1'}],
+                optionsArr1: regionData,
                 drugArr: [],
                 storeArr: [],
                 formInfo: {
@@ -131,7 +134,7 @@
                     drugName: {label: '购买药品名称', placeholder: '请输入关键字(例如:批准文号+药名+厂家+规格)'},
                     buyTime: {label: '购买时间', placeholder: '请输入购买时间'},
                     drugstore: {label: '药店名称', placeholder: '请输入药店名称'},
-                    storeAddress: {label: '药店地址', placeholder: '请输入药店地址'},
+                    storeAddress: {label: '药店地址', placeholder: '请选择药店地址'},
                     storeAddressDetail: {label: '药店详细地址', placeholder: '请输入药店详细地址'},
                     storeManager: {label: '药店联系人', placeholder: '请输入药店联系人'},
                     storePhone: {label: '药店联系人电话', placeholder: '请输入药店联系人电话'},
@@ -166,7 +169,15 @@
                 }
             }
         },
+        watch: {
+            isUser() {
+                this.userInfo.area = []
+            }
+        },
         mounted() {
+            let resArr = JSON.parse(JSON.stringify(regionData.filter(i => i.label === '福建省')))
+            resArr[0].children = resArr[0].children.filter(i => i.label === '福州市')
+            this.fuzhouOptions = resArr;
             //获取药店信息
             this.getStoreDetail()
         },
@@ -382,12 +393,16 @@
                 obj.storeContactPhone = this.userInfo.storePhone;
                 obj.remark = this.userInfo.note;
                 obj.userAddress = this.userInfo.detailAddress;
+                obj.storeAddress = this.userInfo.storeAddressDetail;
+                obj.provinceCode = this.userInfo.area[0];
+                obj.cityCode = this.userInfo.area[1];
+                obj.countyCode = this.userInfo.area[2];
                 let address1 = this.decryptCode(this.userInfo.area).split('/')
                 let address2 = this.isChangeStoreAddress ? this.decryptCode(this.userInfo.storeAddress).split('/') : this.placeholder.split('/')
                 obj.storeCode = this.userInfo.storeCode;
                 obj.storeName = this.userInfo.drugstore;
                 obj.province = address1[0]
-                obj.storeProvince = address1[0]
+                obj.storeProvince = address2[0]
                 obj.city = address1[1]
                 obj.storeCity = address2[1]
                 if (address1.length > 2) {
@@ -396,14 +411,13 @@
                 if (address2.length > 2) {
                     obj.storeCounty = address2[2]
                 }
-
                 this.axios({
                     method: 'post',
                     url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/saveDrug`,
                     data: obj
                 }).then(res => {
                     this.isSubmitForm = true;
-                    this.isSuccess = res.data.data.data >= 1
+                    this.isSuccess = res.data.data >= 1
                     this.isSumbiting = false;
                 })
             }

@@ -11,12 +11,15 @@
 </template>
 
 <script>
-    import {regionData} from 'element-china-area-data'
 
     export default {
         name: "areaSelect",
         props: {
             placeholder: null,
+            options: {
+                default: () => [],
+                type: Array
+            },
             info: null,
             address: {
                 default: () => [],
@@ -30,11 +33,6 @@
         model: {
             prop: 'value',
             event: 'valChange'
-        },
-        data() {
-            return {
-                options: regionData,
-            }
         },
         methods: {
             changeValue(value) {
