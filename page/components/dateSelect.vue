@@ -7,7 +7,7 @@
             <el-date-picker
                     format="yyyy-MM-dd HH:mm:ss"
                     value-format="yyyy-MM-dd HH:mm:ss"
-                    v-model="showValue"
+                    :value="value"
                     type="datetime"
                     @change="changeValue"
                     :placeholder="info.placeholder">
@@ -29,11 +29,6 @@
             isNecessary: {
                 default: false,
                 type: Boolean
-            }
-        },
-        data() {
-            return {
-                showValue: ''
             }
         },
         methods: {

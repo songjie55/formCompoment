@@ -2,8 +2,8 @@
     <div class="checkItem">
         <label>{{info.label}}</label>
         <ul>
-            <li :class="showValue?'active':''" @click="changeValue(true)">{{showType?'是':'有'}}</li>
-            <li :class="!showValue?'active':''" @click="changeValue(false)">{{showType?'否':'无'}}</li>
+            <li :class="value?'active':''" @click="changeValue(true)">{{showType?'是':'有'}}</li>
+            <li :class="!value?'active':''" @click="changeValue(false)">{{showType?'否':'无'}}</li>
         </ul>
     </div>
 </template>
@@ -16,6 +16,7 @@
             event: 'valChange'
         },
         props: {
+            value:false,
             info: null,
             isTravel: {
                 type: Boolean
