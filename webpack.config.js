@@ -27,7 +27,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 use: ['cache-loader', {
-                    loader: "babel-loader",
+                    loader: "babel-loader?cacheDirectory",
                     options: {
                         cacheDirectory: true,
                         presets: ['@babel/preset-env'],
@@ -37,6 +37,14 @@ module.exports = {
                             }
                         },
                         plugins: [
+                            [
+                                "component",
+                                {
+                                    "libraryName": "element-ui",
+                                    "styleLibraryName": "theme-chalk",
+                                    "module": false
+                                }
+                            ],
                             [require("@babel/plugin-proposal-decorators"), {"legacy": true}]
                         ]
                     }
@@ -116,6 +124,7 @@ module.exports = {
         }),
     ],
     resolve: {
+        modules: [path.resolve(__dirname, 'node_modules')],
         extensions: ['.js', '.json', '.vue', '.css', '.less'], // 模块的后缀名
     },
     devServer: {

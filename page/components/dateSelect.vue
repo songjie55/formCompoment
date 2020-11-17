@@ -25,6 +25,7 @@
             event: 'valChange'
         },
         props: {
+            value:'',
             info: null,
             isNecessary: {
                 default: false,
