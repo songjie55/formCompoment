@@ -89,7 +89,7 @@
                     window.opener = null;
                     window.close();
                 } else if (this.from = 'detail') {
-                    window.location.href = `${this.baseUrl}/mspWechat/wechat/distList/index.html`
+                    window.location.href = `${this.$root.$data.baseUrl}/mspWechat/wechat/distList/index.html`
                 }
             },
             resetForm() {

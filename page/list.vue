@@ -28,7 +28,6 @@
         name: "list",
         data() {
             return {
-                baseUrl: 'http://192.168.1.183',
                 loading: false,
                 disabled: false,
                 noMore: false,
@@ -48,7 +47,7 @@
         },
         methods: {
             goDetail(id) {
-                window.location.href = `${this.baseUrl}/mspWechat/wechat/dist/index.html?id=${id}`
+                window.location.href = `${this.$root.$data.baseUrl}/mspWechat/wechat/dist/index.html?id=${id}`
             },
             getSick(item) {
                 let res = '无';
@@ -85,7 +84,7 @@
                 this.loading = true;
                 this.axios({
                     method: 'post',
-                    url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/queryDrugsaleRegList`,
+                    url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/queryDrugsaleRegList`,
                     data: Object.assign({pageNum: String(this.page)}, this.searchForm)
                 }).then(res => {
                     if (res.data.data.length > 0) {

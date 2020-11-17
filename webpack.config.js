@@ -113,7 +113,8 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, 'template.html')
+            template: path.resolve(__dirname, 'template.html'),
+            title: process.env.PAGE === 'main' ? '购药登记' : ''//公共页面标题
         }),
         new VueLoaderPlugin(),
         // new CleanWebpackPlugin(),//清空dist文件夹
@@ -131,7 +132,6 @@ module.exports = {
         host: '0.0.0.0',//允许局域网别的客户端服务
         hotOnly: true, // 模块更新，不会做页面刷新
         compress: true,//gzip
-        liveReload: false,//检测到文件更改时，开发服务器将重新加载/刷新页面。
-        title: process.env.PAGE === 'main' ? '购药登记' : ''//公共页面标题
+        liveReload: false//检测到文件更改时，开发服务器将重新加载/刷新页面。
     }
 }

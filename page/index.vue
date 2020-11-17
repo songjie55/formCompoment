@@ -110,7 +110,7 @@
         data() {
             return {
                 from: 'add',
-                baseUrl: 'http://192.168.1.183',
+               //
                 placeholder1: '请选择地址',
                 placeholder: '',
                 isChangeStoreAddress: false,
@@ -220,7 +220,7 @@
             searchDetail(id) {
                 this.axios({
                     method: 'post',
-                    url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/queryDrugsaleRegList`,
+                    url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/queryDrugsaleRegList`,
                     data: {id: id, pageNum: '1'}
                 }).then(res => {
                     let data = res.data.data[0]
@@ -281,7 +281,7 @@
             getStoreDetail() {
                 this.axios({
                     method: 'get',
-                    url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/quenyCompNameToCompany`,
+                    url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/quenyCompNameToCompany`,
                 }).then(res => {
                     let data = res.data.data
                     this.userInfo.storeName = data.compName;
@@ -316,7 +316,7 @@
                     }
                     this.axios({
                         method: 'post',
-                        url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/quenyDrugToName`,
+                        url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/quenyDrugToName`,
                         data: data,
                     }).then(res => {
                         if (res.data.data.length > 1000) {
@@ -490,7 +490,7 @@
                 }
                 this.axios({
                     method: 'post',
-                    url: `${this.baseUrl}/mspWechat/disp/drugsaleReg/saveDrug`,
+                    url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/saveDrug`,
                     data: obj
                 }).then(res => {
                     this.isSubmitForm = true;
