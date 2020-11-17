@@ -19,7 +19,7 @@ module.exports = {
     },
     output: {
         filename: "js/bundle-[hash].js",
-        path: path.resolve(__dirname, 'dist/'+(process.env.PAGE).toLowerCase()),
+        path: path.resolve(__dirname, 'dist/' + process.env.PAGE),
         publicPath: ""
     },
     module: {
@@ -116,7 +116,7 @@ module.exports = {
             template: path.resolve(__dirname, 'template.html')
         }),
         new VueLoaderPlugin(),
-        new CleanWebpackPlugin(),
+        // new CleanWebpackPlugin(),//清空dist文件夹
         new UglifyWebpackPlugin({
             parallel: 4
         }),
@@ -125,12 +125,13 @@ module.exports = {
         extensions: ['.js', '.json', '.vue', '.css', '.less'], // 模块的后缀名
     },
     devServer: {
-        contentBase: "./dist/"+(process.env.PAGE).toLowerCase(),
+        contentBase: "./dist/" + process.env.PAGE,
         port: 3000,
         hot: true,
         host: '0.0.0.0',//允许局域网别的客户端服务
         hotOnly: true, // 模块更新，不会做页面刷新
         compress: true,//gzip
-        liveReload: false//检测到文件更改时，开发服务器将重新加载/刷新页面。
+        liveReload: false,//检测到文件更改时，开发服务器将重新加载/刷新页面。
+        title: process.env.PAGE === 'main' ? '购药登记' : ''//公共页面标题
     }
 }
