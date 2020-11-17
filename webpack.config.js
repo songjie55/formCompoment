@@ -118,7 +118,9 @@ module.exports = {
             title: process.env.PAGE === 'main' ? '购药登记' : ''//公共页面标题
         }),
         new VueLoaderPlugin(),
-        // new CleanWebpackPlugin(),//清空dist文件夹
+        new CleanWebpackPlugin({
+            cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, 'dist/' + process.env.PAGE)]
+        }),//清空dist文件夹下指定的文件,想保留的文件直接在开头加上！
         new UglifyWebpackPlugin({
             parallel: 4
         }),
