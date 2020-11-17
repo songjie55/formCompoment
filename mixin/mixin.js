@@ -1,6 +1,6 @@
 let mixinOptions = {
     data() {
-        return {baseUrl: 'http://192.168.1.183'}
+        return {baseUrl: 'http://192.168.1.22:7070'}
     },
     beforeCreate() {
         let vw = document.body.clientWidth,

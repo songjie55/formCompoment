@@ -10,7 +10,6 @@ import {
     Radio,
     FormItem,
     Form,
-    InfiniteScroll,
     Checkbox,
     CheckboxGroup
 } from 'element-ui';
@@ -27,7 +26,6 @@ Vue.use(RadioGroup);
 Vue.use(Radio);
 Vue.use(FormItem);
 Vue.use(Form);
-Vue.use(InfiniteScroll);
 Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
 Vue.use(VueAxios, axios);
