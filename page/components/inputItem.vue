@@ -3,7 +3,7 @@
         <label>{{info.label}}<i v-if="isNecessary">*</i>
             <slot name="label"></slot>
         </label>
-        <input :disabled="disabled" :type="type" :value="value" :placeholder="info.placeholder" @input="changeValue">
+        <input :disabled="disabled" :readonly="isReadonly"  :type="type" :value="value" :placeholder="info.placeholder" @input="changeValue">
     </div>
 </template>
 
@@ -21,6 +21,10 @@
                 type: String
             },
             info: null,
+            isReadonly: {
+                default: false,
+                type: Boolean
+            },
             isNecessary: {
                 default: false,
                 type: Boolean
@@ -44,7 +48,7 @@
     }
 
     label {
-        font-size: .13rem;
+        font-size: .14rem;
         font-weight: 400;
         color: #333333;
         display: block;
@@ -66,7 +70,7 @@
         display: block;
         width: 100%;
         line-height: .32rem;
-        font-size: .13rem;
+        font-size: .14rem;
         border: unset;
         border-bottom: 1px solid #E6E9EB;
         outline: none;

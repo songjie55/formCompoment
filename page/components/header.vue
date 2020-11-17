@@ -121,7 +121,7 @@
         box-sizing: border-box;
         height: 40px;
         background-color: #1b2c5f;
-        font-size: .13rem;
+        font-size: .14rem;
         color: #ffffff;
 
         i {
@@ -135,7 +135,7 @@
             background-color: transparent;
             border: none;
             color: #ffffff;
-            font-size: .13rem;
+            font-size: .14rem;
             line-height: .4rem;
         }
 

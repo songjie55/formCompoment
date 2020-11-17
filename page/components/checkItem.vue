@@ -51,7 +51,7 @@
     .checkItem {
         margin-bottom: .2rem;
         display: flex;
-        font-size: .13rem;
+        font-size: .14rem;
         height: .3rem;
         line-height: .2rem;
         justify-content: space-between;

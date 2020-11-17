@@ -51,7 +51,7 @@
     }
 
     label {
-        font-size: .13rem;
+        font-size: .14rem;
         font-weight: 400;
         color: #333333;
         display: block;

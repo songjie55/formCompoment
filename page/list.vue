@@ -124,7 +124,7 @@
     .listItem {
         width: 90%;
         padding: 2% 5%;
-        font-size: .13rem;
+        font-size: .14rem;
         margin: 0 auto .15rem;
         background: #FFFFFF;
         box-shadow: 0px 5px 15px 0px rgba(179, 179, 179, 0.3);

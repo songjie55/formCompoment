@@ -3,7 +3,7 @@
         <label>{{info.label}}<i v-if="isNecessary">*</i>
             <div class="arrow"></div>
         </label>
-        <div class="select" :class="placeholder?'showD':''">
+        <div class="select" :class="placeholder!=='请选择地址'?'showD':''">
             <el-cascader :disabled="disabled" :placeholder="placeholder" :options="options" :value="address" @change="changeValue">
             </el-cascader>
         </div>
@@ -55,7 +55,7 @@
 
 
         label {
-            font-size: .13rem;
+            font-size: .14rem;
             font-weight: 400;
             color: #333333;
             display: block;
@@ -90,7 +90,7 @@
             width: 100%;
             height: .32rem;
             line-height: .32rem;
-            font-size: .13rem;
+            font-size: .14rem;
             border: unset;
             border-bottom: 1px solid #E6E9EB;
             outline: none;

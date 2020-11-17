@@ -89,7 +89,8 @@
             return {
                 loading: false,
                 options1: [{value: '', label: '请选择'}, ...this.optionArr],
-                options2: this.optionArr
+                options2: this.optionArr,
+                isPrinted: null
             }
         },
         methods: {
@@ -102,7 +103,13 @@
             getOptionArr(query) {
                 if (query !== '') {
                     this.loading = true;
-                    this.$emit('getOptions', {value: query})
+                    //添加防抖
+                    if (typeof this.isPrinted == 'number') {
+                        clearTimeout(this.isPrinted)
+                    }
+                    this.isPrinted = setTimeout(() => {
+                        this.$emit('getOptions', {value: query})
+                    }, 1000)
                 } else {
                     this.loading = false;
                     this.options2 = [];
@@ -118,7 +125,7 @@
     }
 
     label {
-        font-size: .13rem;
+        font-size: .14rem;
         font-weight: 400;
         color: #333333;
         display: block;
@@ -152,7 +159,7 @@
         display: block;
         width: 100%;
         line-height: .32rem;
-        font-size: .13rem;
+        font-size: .14em;
         border: unset;
         border-bottom: 1px solid #E6E9EB;
         outline: none;
@@ -180,6 +187,7 @@
             padding: 0 !important;
             border: none;
             outline: none;
+            font-size: .14rem;
         }
 
         .el-select__caret {

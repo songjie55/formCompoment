@@ -63,8 +63,9 @@
                          :option-arr="drugArr"
                          :disabled="isShowDetail"
                          is-search :is-necessary="!isShowDetail"></select-item>
-            <date-select :disabled="isShowDetail" :info="formInfo.purchaseTime" :is-necessary="!isShowDetail" v-model="userInfo.purchaseTime"></date-select>
-            <input-item :disabled="true" :info="formInfo.storeName" :is-necessary="!isShowDetail"
+            <date-select :disabled="isShowDetail" :info="formInfo.purchaseTime" :is-necessary="!isShowDetail"
+                         v-model="userInfo.purchaseTime"></date-select>
+            <input-item :isReadonly="true" :info="formInfo.storeName" :is-necessary="!isShowDetail"
                         v-model="userInfo.storeName"></input-item>
             <area-select :disabled="isShowDetail" :options="optionsArr1" :placeholder="placeholder"
                          :info="formInfo.storeAddress"
@@ -110,7 +111,7 @@
         data() {
             return {
                 from: 'add',
-               //
+                //
                 placeholder1: '请选择地址',
                 placeholder: '',
                 isChangeStoreAddress: false,
@@ -509,6 +510,9 @@
     }
 
     body {
+        width: 100vw;
+        height: 100vh;
+        overflow-y: scroll;
         background: #F5F5F5;
     }
 
@@ -527,7 +531,7 @@
             margin-bottom: .15rem;
             display: flex;
             color: #666666;
-            font-size: .13rem;
+            font-size: .14rem;
         }
 
         .el-radio__input.is-checked + .el-radio__label {
@@ -554,7 +558,7 @@
         float: right;
 
         span {
-            font-size: .13rem;
+            font-size: .14rem;
             color: #666666;
             padding: 0.02rem 0.07rem;
             line-height: .2rem;
@@ -596,7 +600,7 @@
         background: #fff;
         width: 100vw;
         height: 80vh;
-        font-size: .13rem;
+        font-size: .14rem;
         color: #333333;
         text-align: center;
         padding-top: 20vh;
@@ -614,7 +618,7 @@
         position: fixed;
         z-index: -100;
         left: 50%;
-        font-size: .13rem;
+        font-size: .14rem;
         top: 50%;
         transform: translate(-50%, -60%);
         text-align: center;
