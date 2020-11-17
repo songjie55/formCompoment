@@ -37,12 +37,13 @@ module.exports = {
                             }
                         },
                         plugins: [
-                            // [
-                            //     "element-ui",
-                            //     {
-                            //         "module": false
-                            //     }
-                            // ],
+                            [
+                                "component", {
+                                "libraryName": "element-ui",
+                                "styleLibraryName": "theme-chalk",
+                                "module": false
+                            }
+                            ],
                             [require("@babel/plugin-proposal-decorators"), {"legacy": true}]
                         ]
                     }
