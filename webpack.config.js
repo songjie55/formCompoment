@@ -19,7 +19,7 @@ module.exports = {
     },
     output: {
         filename: "js/bundle-[hash].js",
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist/'+(process.env.PAGE).toLowerCase()),
         publicPath: ""
     },
     module: {
@@ -125,7 +125,7 @@ module.exports = {
         extensions: ['.js', '.json', '.vue', '.css', '.less'], // 模块的后缀名
     },
     devServer: {
-        contentBase: "./dist",
+        contentBase: "./dist/"+(process.env.PAGE).toLowerCase(),
         port: 3000,
         hot: true,
         host: '0.0.0.0',//允许局域网别的客户端服务
