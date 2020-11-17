@@ -1,6 +1,6 @@
 <template>
     <div class="container infinite-list-wrapper" style="overflow:auto;height: 100vh;">
-        <header-search @startSearch="searchList"></header-search>
+        <header-search @startSearch="searchList" ></header-search>
         <ul class="infinite-list" v-infinite-scroll="loaderMore" infinite-scroll-disabled="disabled"
             infinite-scroll-immediate="false">
             <li class="listItem" v-for="(item,index) in list" :key="item.id" @click="goDetail(item.id)">
@@ -8,7 +8,7 @@
                     <span style="font-size: .16rem;color: #2e2e2e;">{{item.drugUserName}}</span>
                     症状:{{getSick(item)}}
                 </p>
-                <p><span>性别</span>{{item.userSex=='F'?'女':'男'}}</p>
+                <p><span>性别</span>{{item.userSex}}</p>
                 <p><span>居住地址</span>{{item.userAddress}}</p>
                 <p><span>联系电话</span>{{item.userPhone}}</p>
                 <p><span>用药者来源</span>{{getFrom(item)}}</p>
@@ -133,6 +133,10 @@
         box-sizing: border-box;
 
         p {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             line-height: .25rem;
             text-align: right;
             color: #333333;

@@ -1,4 +1,9 @@
 let mixinOptions = {
+    data(){
+        return {
+            url:'123'
+        }
+    },
     beforeCreate() {
         let vw = document.body.clientWidth,
             html = document.getElementsByTagName('html')[0];

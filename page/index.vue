@@ -1,5 +1,6 @@
 <template>
     <div class="contain">
+        <header-search :from="from"></header-search>
         <div class="formItem">
             <h4>个人信息</h4>
             <input-item :disabled="isShowDetail" :info="formInfo.drugUserName" :is-necessary="!isShowDetail"
@@ -62,8 +63,7 @@
                          :option-arr="drugArr"
                          :disabled="isShowDetail"
                          is-search :is-necessary="!isShowDetail"></select-item>
-            <date-select :disabled="isShowDetail" :info="formInfo.purchaseTime" :is-necessary="!isShowDetail"
-                         v-model="userInfo.purchaseTime"></date-select>
+            <date-select :disabled="isShowDetail" :info="formInfo.purchaseTime" :is-necessary="!isShowDetail" v-model="userInfo.purchaseTime"></date-select>
             <input-item :disabled="true" :info="formInfo.storeName" :is-necessary="!isShowDetail"
                         v-model="userInfo.storeName"></input-item>
             <area-select :disabled="isShowDetail" :options="optionsArr1" :placeholder="placeholder"
@@ -100,14 +100,16 @@
     import areaSelect from "./components/areaSelect";
     import checkItem from "./components/checkItem";
     import dateSelect from "./components/dateSelect";
+    import headerSearch from "./components/header";
     import Schema from 'async-validator'
     import {CodeToText, regionData} from 'element-china-area-data'
 
     export default {
         name: "index",
-        components: {inputItem, selectItem, areaSelect, checkItem, dateSelect},
+        components: {inputItem, selectItem, areaSelect, checkItem, dateSelect, headerSearch},
         data() {
             return {
+                from: 'add',
                 baseUrl: 'http://192.168.1.183',
                 placeholder1: '请选择地址',
                 placeholder: '',
@@ -152,7 +154,7 @@
                     emergencyContact: {label: '紧急联系人', placeholder: '请输入紧急联系人姓名'},
                     emergencyPhone: {label: '紧急联系人电话', placeholder: '请输入紧急联系人电话'},
                     drugNames: {label: '购买药品名称', placeholder: '请输入关键字(例如:批准文号+药名+厂家+规格)'},
-                    purchaseTime: {label: '购买时间', placeholder: '请输入购买时间'},
+                    purchaseTime: {label: '购买时间', placeholder: '请选择购买时间'},
                     storeName: {label: '药店名称', placeholder: '请输入药店名称'},
                     storeAddress: {label: '药店地址', placeholder: '请选择药店地址'},
                     storeAddressDetail: {label: '药店详细地址', placeholder: '请输入药店详细地址'},
@@ -195,10 +197,11 @@
             }
         },
         mounted() {
-            if (window.location.href.indexOf('?') > -1) {
+            if (window.location.href.indexOf('?') > -1 && window.location.href.split('?')[1].indexOf('id=') > -1) {
                 this.isShowDetail = true;
                 let id = window.location.href.split('?')[1].split('=')[1];
                 this.searchDetail(id)
+                this.from = 'detail'
             } else {
                 let resArr = JSON.parse(JSON.stringify(regionData.filter(i => i.label === '福建省')))
                 resArr[0].children = resArr[0].children.filter(i => i.label === '福州市')
@@ -234,10 +237,10 @@
                         if (data.isCloseWithHighPeople === '是') this.userInfo.from.push('3')
                         if (data.isOtherSource === '是') this.userInfo.from.push('4')
                         if (data.isOtherSource === '是' || data.isFromHighRisk === '是' || data.isToHighRiskIn14 === '是' || data.isCloseWithHighPeople === '是') {
-                            this.isOther = false;
+                            this.isOther = true;
                         }
                         if (data.isOtherSource === '是') {
-                            this.isOther = true;
+                            this.isNotOther = true;
                         }
                         this.userInfo.isCough = data.isCoughSymptoms === '是';
                         this.userInfo.isFever = data.isFeverSymptoms === '是';
@@ -380,7 +383,7 @@
                     },
                     emergencyPhone: {
                         required: true,
-                        message: '请输入紧急联系人联系电话',
+                        message: '请输入正确紧急联系人电话',
                         validator: (rule, value) => {
                             return /^1(3|4|5|6|7|8|9)\d{9}$/.test(value)
                         }
@@ -419,7 +422,7 @@
                     },
                     storeContactPhone: {
                         required: true,
-                        message: '请输入药店联系人联系电话',
+                        message: '请输入正确药店联系人电话',
                         validator: (rule, value) => {
                             return /^1(3|4|5|6|7|8|9)\d{9}$/.test(value)
                         }

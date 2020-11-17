@@ -10,7 +10,7 @@
                     value-format="yyyyMMdd"
                     :value="value"
                     type="date"
-                    @change="changeValue"
+                    @input="changeValue"
                     :placeholder="info.placeholder">
             </el-date-picker>
         </div>
