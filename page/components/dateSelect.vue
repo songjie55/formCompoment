@@ -9,7 +9,7 @@
                     value-format="yyyy-MM-dd HH:mm:ss"
                     :value="value"
                     type="datetime"
-                    @change="changeValue"
+                    @input="changeValue"
                     :placeholder="info.placeholder">
             </el-date-picker>
         </div>
