@@ -126,7 +126,7 @@ module.exports = {
         }),
     ],
     resolve: {
-        extensions: ['.js', '.json', '.vue', '.css', '.less'], // 模块的后缀名
+        extensions: ['.js', '.json', '.vue', '.css', '.less'], // 模块的后缀名，尽可能引入的时候带上后缀，不然打包的时候是按这个数组的顺序加上后缀去查找文件，浪费打包时间
     },
     devServer: {
         contentBase: "./dist/" + process.env.PAGE,

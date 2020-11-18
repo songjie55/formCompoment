@@ -1,6 +1,7 @@
 <template>
     <div class="contain">
         <header-search :from="from"></header-search>
+        <img :src="bannerImg" alt="" class="bannerImg">
         <div class="formItem">
             <h4>个人信息</h4>
             <input-item :disabled="isShowDetail" :info="formInfo.drugUserName" :is-necessary="!isShowDetail"
@@ -12,7 +13,7 @@
                         :is-necessary="!isShowDetail"></input-item>
             <input-item :disabled="isShowDetail" type="number" :info="formInfo.userAge" v-model="userInfo.userAge"
                         :is-necessary="!isShowDetail"></input-item>
-            <input-item :disabled="isShowDetail" type="number" :info="formInfo.userPhone" v-model="userInfo.userPhone"
+            <input-item :disabled="isShowDetail" :info="formInfo.userPhone" v-model="userInfo.userPhone"
                         :is-necessary="!isShowDetail">
                 <template v-slot:label>
                     <div class="whosePhone">
@@ -52,8 +53,7 @@
             <input-item :disabled="isShowDetail" :info="formInfo.emergencyContact" :is-necessary="!isShowDetail"
                         v-model="userInfo.emergencyContact"></input-item>
             <input-item :disabled="isShowDetail" :info="formInfo.emergencyPhone" :is-necessary="!isShowDetail"
-                        v-model="userInfo.emergencyPhone"
-                        type="number"></input-item>
+                        v-model="userInfo.emergencyPhone"></input-item>
         </div>
         <div class="formItem">
             <h4>购药信息</h4>
@@ -76,7 +76,7 @@
                         v-model="userInfo.storeAddressDetail"></input-item>
             <input-item :disabled="isShowDetail" :info="formInfo.storeContact" :is-necessary="!isShowDetail"
                         v-model="userInfo.storeContact"></input-item>
-            <input-item :disabled="isShowDetail" type="number" :info="formInfo.storeContactPhone"
+            <input-item :disabled="isShowDetail" :info="formInfo.storeContactPhone"
                         :is-necessary="!isShowDetail"
                         v-model="userInfo.storeContactPhone"></input-item>
             <input-item :disabled="isShowDetail" :info="formInfo.remark" v-model="userInfo.remark"></input-item>
@@ -122,6 +122,7 @@
                 isOther: false,
                 isShowDetail: false,
                 isUser: true,
+                bannerImg: require("../static/banner.png"),
                 sucImg: require("../static/success.jpg"),
                 failImg: require("../static/fail.jpg"),
                 isSuccess: true,
@@ -144,7 +145,7 @@
                     area: {label: '目前居住地址', placeholder: '请选择地址'},
                     idCard: {label: '证件号码', placeholder: '请输入用药者证件号码'},
                     userAge: {label: '年龄', placeholder: '请输入用药者的年龄'},
-                    userPhone: {label: '联系电话', placeholder: '请输入联系电话(手机)'},
+                    userPhone: {label: '联系电话', placeholder: '请输入联系电话'},
                     userAddress: {label: '详细地址', placeholder: '请输入详细地址'},
                     userSex: {label: '性别'},
                     isTravel: {label: '境外旅居史'},
@@ -225,7 +226,6 @@
                     data: {id: id, pageNum: '1'}
                 }).then(res => {
                     let data = res.data.data[0]
-                    console.log(data)
                     this.isUser = data.isUserPhone === '1'
                     this.userInfo = Object.assign(this.userInfo, data)
                     this.placeholder = [data.storeProvince, data.storeCity, data.storeCounty].join('/');
@@ -357,7 +357,7 @@
                         required: true,
                         message: '请输入正确联系电话',
                         validator: (rule, value) => {
-                            return /^1(3|4|5|6|7|8|9)\d{9}$/.test(value)
+                            return (/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) || (/0\d{2,3}-[1-9]\d{6,7}/.test(value))
                         }
                     },
                     area: {
@@ -386,7 +386,7 @@
                         required: true,
                         message: '请输入正确紧急联系人电话',
                         validator: (rule, value) => {
-                            return /^1(3|4|5|6|7|8|9)\d{9}$/.test(value)
+                            return (/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) || (/0\d{2,3}-[1-9]\d{6,7}/.test(value))
                         }
                     },
                     drugNames: {
@@ -425,7 +425,7 @@
                         required: true,
                         message: '请输入正确药店联系人电话',
                         validator: (rule, value) => {
-                            return /^1(3|4|5|6|7|8|9)\d{9}$/.test(value)
+                            return (/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) || (/0\d{2,3}-[1-9]\d{6,7}/.test(value))
                         }
                     }
                 };
@@ -514,6 +514,11 @@
         height: 100vh;
         overflow-y: scroll;
         background: #F5F5F5;
+    }
+
+    .bannerImg {
+        width: 100%;
+        display: block;
     }
 
     .formItem {
