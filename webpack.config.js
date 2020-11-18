@@ -5,6 +5,7 @@ const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');//压缩css
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');//分离css单独引用,这个loader不能喝style-loader一起用
+const DllReferencePlugin = require('webpack/lib/DllReferencePlugin')//链接动态链接库
 
 let miniArr = [new OptimizeCssAssetsWebpackPlugin()]
 if (process.env.MODE !== 'development') {
@@ -23,6 +24,7 @@ module.exports = {
         publicPath: ""
     },
     module: {
+        noParse: [/vue\.min\.js$/],
         rules: [
             {
                 test: /\.js$/,
@@ -90,7 +92,7 @@ module.exports = {
             }
         ]
     },
-    devtool: process.env.MODE === 'development' ? 'source-map' : 'eval',
+    devtool: process.env.MODE === 'development' ? 'hidden-source-map' : 'none',
     optimization: {
         minimizer: miniArr,
         splitChunks: {
@@ -114,11 +116,19 @@ module.exports = {
         }
     },
     plugins: [
+        //配置动态链接库，注意版本配置会有所不同
+        new DllReferencePlugin({
+            context: __dirname,
+            scope:'_dll_vue',//链接库要暴露出来的全局对象名，和dll的library必须一样
+            manifest: require('./dist/dll/vue.manifest.json')
+        }),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'template.html')
         }),
         new VueLoaderPlugin(),
-        new CleanWebpackPlugin(),
+        new CleanWebpackPlugin({
+            cleanOnceBeforeBuildPatterns: ['!' + path.resolve(__dirname, 'dist/dll')]
+        }),
         new UglifyWebpackPlugin({
             parallel: 4
         }),
@@ -126,6 +136,9 @@ module.exports = {
     resolve: {
         modules: [path.resolve(__dirname, 'node_modules')],
         extensions: ['.js', '.json', '.vue', '.css', '.less'], // 模块的后缀名
+        alias: {
+            'vue': path.resolve(__dirname, 'node_modules/vue/dist/vue.min.js')
+        }
     },
     devServer: {
         contentBase: "./dist",
