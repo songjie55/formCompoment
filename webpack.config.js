@@ -5,7 +5,8 @@ const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');//压缩css
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');//分离css单独引用,这个loader不能喝style-loader一起用
-const DllReferencePlugin = require('webpack/lib/DllReferencePlugin')//链接动态链接库
+const DllReferencePlugin = require('webpack/lib/DllReferencePlugin')//链接动态链接库，小项目依赖少的话不需要做动态链接库，不然反而会增加打包后的体积大小
+const HappyPack = require('happypack')//多进程打包
 
 let miniArr = [new OptimizeCssAssetsWebpackPlugin()]
 if (process.env.MODE !== 'development') {
@@ -28,29 +29,7 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                use: ['cache-loader', {
-                    loader: "babel-loader?cacheDirectory",
-                    options: {
-                        cacheDirectory: true,
-                        presets: ['@babel/preset-env'],
-                        env: {
-                            development: {
-                                plugins: ['dynamic-import-node']
-                            }
-                        },
-                        plugins: [
-                            [
-                                "component",
-                                {
-                                    "libraryName": "element-ui",
-                                    "styleLibraryName": "theme-chalk",
-                                    "module": false
-                                }
-                            ],
-                            [require("@babel/plugin-proposal-decorators"), {"legacy": true}]
-                        ]
-                    }
-                }],
+                use: ['cache-loader', 'happypack/loader?id=babel'],
                 exclude: '/node_modules/'
             },
             {
@@ -116,10 +95,37 @@ module.exports = {
         }
     },
     plugins: [
+        //多进程打包
+        new HappyPack({
+            id: 'babel',
+            loaders: [{
+                loader: 'babel-loader',
+                options: {
+                    cacheDirectory: true,
+                    presets: ['@babel/preset-env'],
+                    env: {
+                        development: {
+                            plugins: ['dynamic-import-node']
+                        }
+                    },
+                    plugins: [
+                        [
+                            "component",
+                            {
+                                "libraryName": "element-ui",
+                                "styleLibraryName": "theme-chalk",
+                                "module": false
+                            }
+                        ],
+                        [require("@babel/plugin-proposal-decorators"), {"legacy": true}]
+                    ]
+                }
+            }]
+        }),
         //配置动态链接库，注意版本配置会有所不同
         new DllReferencePlugin({
             context: __dirname,
-            scope:'_dll_vue',//链接库要暴露出来的全局对象名，和dll的library必须一样
+            scope: '_dll_vue',//链接库要暴露出来的全局对象名，和dll的library必须一样
             manifest: require('./dist/dll/vue.manifest.json')
         }),
         new HtmlWebpackPlugin({
