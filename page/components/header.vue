@@ -54,7 +54,6 @@
         name: "headerSearch",
         data() {
             return {
-                baseUrl: 'http://192.168.1.183',
                 isShowForm: false,
                 imgList: [
                     require('../../static/drug.png'),
@@ -87,8 +86,9 @@
             backPage() {
                 if (this.from === 'list' || this.from === 'add') {
                     //微信公众号单独的关闭网页方法
-                    document.addEventListener('WeixinJSBridgeReady', function(){ WeixinJSBridge.call('closeWindow'); }, false);
-                    WeixinJSBridge.call('closeWindow');
+                    window.history.go(-1)
+                    // document.addEventListener('WeixinJSBridgeReady', function(){ WeixinJSBridge.call('closeWindow'); }, false);
+                    // WeixinJSBridge.call('closeWindow');
                 } else if (this.from = 'detail') {
                     window.location.href = `${this.$root.$data.baseUrl}/mspWechat/wechat/distList/index.html`
                 }
