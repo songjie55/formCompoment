@@ -96,7 +96,7 @@ module.exports = {
             cacheGroups: {
                 vendors: {
                     name: 'vendor',
-                    test: '/[\\/]node_modules[\\/]/',
+                    test: /[\\/]node_modules[\\/]/,
                     priority: -10
                 },
                 common: {
