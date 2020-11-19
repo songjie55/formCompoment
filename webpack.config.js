@@ -1,19 +1,14 @@
-const path = require('path')
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
-const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');//压缩css
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');//分离css单独引用,这个loader不能喝style-loader一起用
-const DllReferencePlugin = require('webpack/lib/DllReferencePlugin')//链接动态链接库，小项目依赖少的话不需要做动态链接库，不然反而会增加打包后的体积大小
-const HappyPack = require('happypack')//多进程打包
+const DllReferencePlugin = require('webpack/lib/DllReferencePlugin');//链接动态链接库，小项目依赖少的话不需要做动态链接库，不然反而会增加打包后的体积大小
+const HappyPack = require('happypack');//多进程打包
 
-let miniArr = [new OptimizeCssAssetsWebpackPlugin()]
-if (process.env.MODE !== 'development') {
-    miniArr.push(new MiniCssExtractPlugin({//这个插件不能和热更一起用，会让Vue中style标签里面的样式不能热更，webpack5自带热更，不需要在plugins里面添加HMR
-        filename: 'css/[name]-[hash].css'
-    }))
-}
+
 module.exports = {
     mode: 'development',
     entry: {
@@ -49,8 +44,8 @@ module.exports = {
             },
             {
                 test: /\.less$/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader'],//less-loader和postcss-loader两者的顺序无所谓谁前谁后
-                exclude: '/node_modules/'
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader']//less-loader和postcss-loader两者的顺序无所谓谁前谁后
+                // exclude: '/node_modules/'
             },
             {
                 test: /\.(gif|jpg|png|svg)/,
@@ -71,9 +66,9 @@ module.exports = {
             }
         ]
     },
-    devtool: "none",
+    devtool: "cheap-module-source-map",
     optimization: {
-        minimizer: miniArr,
+        minimizer: [new OptimizeCssAssetsWebpackPlugin()],
         splitChunks: {
             cacheGroups: {
                 vendors: {
@@ -102,7 +97,6 @@ module.exports = {
             loaders: [{
                 loader: 'babel-loader',
                 options: {
-                    cacheDirectory: true,
                     presets: ['@babel/preset-env'],
                     env: {
                         development: {
@@ -135,6 +129,9 @@ module.exports = {
         new VueLoaderPlugin(),
         new CleanWebpackPlugin({
             cleanOnceBeforeBuildPatterns: ['!' + path.resolve(__dirname, 'dist/dll')]
+        }),
+        new MiniCssExtractPlugin({//这个插件不能和热更一起用，会让Vue中style标签里面的样式不能热更，webpack5自带热更，不需要在plugins里面添加HMR
+            filename: 'css/[name]-[hash].css'
         }),
         new UglifyWebpackPlugin({
             parallel: 4
