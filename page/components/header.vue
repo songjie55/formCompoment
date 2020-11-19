@@ -86,8 +86,9 @@
             },
             backPage() {
                 if (this.from === 'list' || this.from === 'add') {
-                    window.opener = null;
-                    window.close();
+                    //微信公众号单独的关闭网页方法
+                    document.addEventListener('WeixinJSBridgeReady', function(){ WeixinJSBridge.call('closeWindow'); }, false);
+                    WeixinJSBridge.call('closeWindow');
                 } else if (this.from = 'detail') {
                     window.location.href = `${this.$root.$data.baseUrl}/mspWechat/wechat/distList/index.html`
                 }
