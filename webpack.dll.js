@@ -2,6 +2,7 @@ const path = require('path');
 const DllPlugin = require('webpack/lib/DllPlugin')
 //构建动态链接库
 module.exports = {
+    mode: "production",
     entry: {'vue': ['vue']},
     output: {
         path: path.resolve(__dirname, 'dist/dll'),

@@ -1,19 +1,9 @@
-const path = require('path')
+//关闭多余的代码压缩，提高热更时候的编译速度
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
-const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin')
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');//压缩css
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');//分离css单独引用,这个loader不能喝style-loader一起用
 const DllReferencePlugin = require('webpack/lib/DllReferencePlugin')//链接动态链接库，小项目依赖少的话不需要做动态链接库，不然反而会增加打包后的体积大小
-const HappyPack = require('happypack')//多进程打包
 
-let miniArr = [new OptimizeCssAssetsWebpackPlugin()]
-if (process.env.MODE !== 'development') {
-    miniArr.push(new MiniCssExtractPlugin({//这个插件不能和热更一起用，会让Vue中style标签里面的样式不能热更，webpack5自带热更，不需要在plugins里面添加HMR
-        filename: 'css/[name]-[hash].css'
-    }))
-}
 module.exports = {
     mode: 'development',
     entry: {
@@ -29,7 +19,29 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                use: ['happypack/loader?id=babel'],
+                use: ['cache-loader', {
+                    loader: 'babel-loader',
+                    options: {
+                        cacheDirectory: true,
+                        presets: ['@babel/preset-env'],
+                        env: {
+                            development: {
+                                plugins: ['dynamic-import-node']
+                            }
+                        },
+                        plugins: [
+                            [
+                                "component",
+                                {
+                                    "libraryName": "element-ui",
+                                    "styleLibraryName": "theme-chalk",
+                                    "module": false
+                                }
+                            ],
+                            [require("@babel/plugin-proposal-decorators"), {"legacy": true}]
+                        ]
+                    }
+                }],
                 exclude: '/node_modules/'
             },
             {
@@ -45,11 +57,11 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader']
+                use: ['style-loader', 'css-loader']
             },
             {
                 test: /\.less$/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader'],//less-loader和postcss-loader两者的顺序无所谓谁前谁后
+                use: ['style-loader', 'css-loader', 'postcss-loader', 'less-loader'],//less-loader和postcss-loader两者的顺序无所谓谁前谁后
                 exclude: '/node_modules/'
             },
             {
@@ -67,13 +79,12 @@ module.exports = {
             },
             {
                 test: /\.vue$/,
-                use: 'vue-loader'
+                use: ['cache-loader', 'vue-loader']
             }
         ]
     },
-    devtool: "none",
+    devtool: 'hidden-source-map',
     optimization: {
-        minimizer: miniArr,
         splitChunks: {
             cacheGroups: {
                 vendors: {
@@ -96,33 +107,6 @@ module.exports = {
         }
     },
     plugins: [
-        //多进程打包
-        new HappyPack({
-            id: 'babel',
-            loaders: [{
-                loader: 'babel-loader',
-                options: {
-                    cacheDirectory: true,
-                    presets: ['@babel/preset-env'],
-                    env: {
-                        development: {
-                            plugins: ['dynamic-import-node']
-                        }
-                    },
-                    plugins: [
-                        [
-                            "component",
-                            {
-                                "libraryName": "element-ui",
-                                "styleLibraryName": "theme-chalk",
-                                "module": false
-                            }
-                        ],
-                        [require("@babel/plugin-proposal-decorators"), {"legacy": true}]
-                    ]
-                }
-            }]
-        }),
         //配置动态链接库，注意版本配置会有所不同
         new DllReferencePlugin({
             context: __dirname,
@@ -132,13 +116,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'template.html')
         }),
-        new VueLoaderPlugin(),
-        new CleanWebpackPlugin({
-            cleanOnceBeforeBuildPatterns: ['!' + path.resolve(__dirname, 'dist/dll')]
-        }),
-        new UglifyWebpackPlugin({
-            parallel: 4
-        }),
+        new VueLoaderPlugin()
     ],
     resolve: {
         modules: [path.resolve(__dirname, 'node_modules')],
@@ -146,5 +124,14 @@ module.exports = {
         alias: {
             'vue': path.resolve(__dirname, 'node_modules/vue/dist/vue.min.js')
         }
+    },
+    devServer: {
+        contentBase: "./dist",
+        port: 3000,
+        hot: true,
+        host: '0.0.0.0',//允许局域网别的客户端服务
+        hotOnly: true, // 模块更新，不会做页面刷新
+        compress: true,//gzip
+        liveReload: false//检测到文件更改时，开发服务器将重新加载/刷新页面。
     }
 }
