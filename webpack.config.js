@@ -89,7 +89,7 @@ module.exports = {
             }
         ]
     },
-    devtool: process.env.MODE === 'development' ? 'hidden-source-map' : 'none',
+    devtool: process.env.MODE === 'development' ? 'hidden-source-map' : 'cheap-module-source-map',
     optimization: {
         minimizer: miniArr,
         splitChunks: {
@@ -97,7 +97,8 @@ module.exports = {
                 vendors: {
                     name: 'vendor',
                     test: /[\\/]node_modules[\\/]/,
-                    priority: -10
+                    priority: -10,
+                    chunks: "initial"
                 },
                 common: {
                     name: `common`,
