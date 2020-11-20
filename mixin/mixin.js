@@ -1,6 +1,6 @@
 let mixinOptions = {
     data() {
-        return {baseUrl: 'https://59.60.7.150:7443'}
+        return {baseUrl: 'http://fuzgxqmsp.cn'}
         // return {baseUrl: 'http://192.168.1.22:7070'}
     },
     beforeCreate() {
