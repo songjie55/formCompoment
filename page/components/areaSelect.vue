@@ -1,31 +1,34 @@
 <template>
-    <div class="areaSelect">
-        <label>{{info.label}}<i v-if="isNecessary">*</i>
-            <div class="arrow"></div>
-        </label>
-        <div class="select">
-            <!--            :placeholder="info.placeholder"-->
-            <el-cascader :options="options" v-model="showValue" @change="changeValue">
-            </el-cascader>
-        </div>
+  <div class="areaSelect">
+    <label>{{ info.label }}<i v-if="isNecessary">*</i>
+      <div class="arrow" />
+    </label>
+    <div class="select">
+      <!--            :placeholder="info.placeholder"-->
+      <el-cascader
+        v-model="showValue"
+        :options="options"
+        @change="changeValue"
+      />
     </div>
+  </div>
 </template>
 
 <script>
     import {regionData, CodeToText} from 'element-china-area-data'
 
     export default {
-        name: "areaSelect",
+        name: "AreaSelect",
+        model: {
+            prop: 'value',
+            event: 'valChange'
+        },
         props: {
             info: null,
             isNecessary: {
                 default: false,
                 type: Boolean
             }
-        },
-        model: {
-            prop: 'value',
-            event: 'valChange'
         },
         data() {
             return {
@@ -38,6 +41,7 @@
                 this.showValue = value
                 let name = '';
                 this.showValue.map(item => name += CodeToText[item])
+              // eslint-disable-next-line vue/custom-event-name-casing
                 this.$emit('valChange', name)
             },
             clearValue() {

@@ -23,6 +23,16 @@ module.exports = {
         noParse: [/vue\.min\.js$/],
         rules: [
             {
+                test:/\.(js|vue)$/,
+                loader: 'eslint-loader',
+                enforce: "pre",//提前预处理，
+                include:[path.resolve(__dirname,'page'),path.resolve(__dirname,'main.js')],
+                //eslint检查报告的格式规范
+                options: {
+                    formatter: require("eslint-friendly-formatter")
+                }
+            },
+            {
                 test: /\.js$/,
                 use: ['happypack/loader?id=babel'],
                 exclude: '/node_modules/'
