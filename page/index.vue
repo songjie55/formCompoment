@@ -453,7 +453,7 @@
                 obj.isCloseWithHighPeople = this.userInfo.from.find(i => i === '3') !== undefined ? 1 : 0;
                 obj.isOtherSource = this.userInfo.from.find(i => i === '4') !== undefined ? 1 : 0;
                 obj.isToHighRiskIn14 = this.userInfo.from.find(i => i === '2') !== undefined ? 1 : 0;
-                obj.hasOverseaTravelHis = this.userInfo.isTravel ? '1' : '0';
+                obj.hasOverseaTravelHis = this.userInfo.isTravel ? '1' : '2';
                 obj.isFeverSymptoms = this.userInfo.isFever ? '1' : '0';
                 obj.isCoughSymptoms = this.userInfo.isCough ? '1' : '0';
                 obj.isOtherSymptoms = this.userInfo.isOther ? '1' : '0';
