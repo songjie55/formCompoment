@@ -1,43 +1,42 @@
 <template>
-    <div class="wrap">
-        <label>{{info.label}}<i v-if="isNecessary">*</i>
-            <div class="arrow"></div>
-        </label>
-        <div class="select dataSelect">
-            <el-date-picker
-                    format="yyyy-MM-dd HH:mm:ss"
-                    value-format="yyyy-MM-dd HH:mm:ss"
-                    :value="value"
-                    type="datetime"
-                    @input="changeValue"
-                    :placeholder="info.placeholder">
-            </el-date-picker>
-        </div>
-
+  <div class="wrap">
+    <label>{{ info.label }}<i v-if="isNecessary">*</i>
+      <div class="arrow" />
+    </label>
+    <div class="select dataSelect">
+      <el-date-picker
+        format="yyyy-MM-dd HH:mm:ss"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        :value="value"
+        type="datetime"
+        :placeholder="info.placeholder"
+        @input="changeValue"
+      />
     </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "dateItem",
-        model: {
-            prop: 'value',
-            event: 'valChange'
-        },
-        props: {
-            value:'',
-            info: null,
-            isNecessary: {
-                default: false,
-                type: Boolean
-            }
-        },
-        methods: {
-            changeValue(value) {
-                this.$emit('valChange', value)
-            }
-        }
+  export default {
+    name: "DateItem",
+    model: {
+      prop: 'value',
+      event: 'valChange'
+    },
+    props: {
+      value: '',
+      info: null,
+      isNecessary: {
+        default: false,
+        type: Boolean
+      }
+    },
+    methods: {
+      changeValue(value) {
+        this.$emit('valChange', value)
+      }
     }
+  }
 </script>
 
 <style lang="less">

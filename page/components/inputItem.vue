@@ -1,37 +1,42 @@
 <template>
-    <div class="wrap">
-        <label>{{info.label}}<i v-if="isNecessary">*</i>
-            <slot name="label"></slot>
-        </label>
-        <input :type="type" :value="value" :placeholder="info.placeholder" @input="changeValue">
-    </div>
+  <div class="wrap">
+    <label>{{ info.label }}<i v-if="isNecessary">*</i>
+      <slot name="label" />
+    </label>
+    <input
+      :type="type"
+      :value="value"
+      :placeholder="info.placeholder"
+      @input="changeValue"
+    >
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "inputItem",
-        model: {
-            prop: 'value',
-            event: 'valChange'
-        },
-        props: {
-            value: '',//添加一个回显
-            type: {
-                default: 'text',
-                type: String
-            },
-            info: null,
-            isNecessary: {
-                default: false,
-                type: Boolean
-            }
-        },
-        methods: {
-            changeValue(el) {
-                this.$emit('valChange', el.target.value)
-            }
-        }
+  export default {
+    name: "InputItem",
+    model: {
+      prop: 'value',
+      event: 'valChange'
+    },
+    props: {
+      value: '',//添加一个回显
+      type: {
+        default: 'text',
+        type: String
+      },
+      info: null,
+      isNecessary: {
+        default: false,
+        type: Boolean
+      }
+    },
+    methods: {
+      changeValue(el) {
+        this.$emit('valChange', el.target.value)
+      }
     }
+  }
 </script>
 
 <style scoped lang="less">

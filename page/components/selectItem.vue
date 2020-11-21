@@ -1,52 +1,57 @@
 <template>
-    <div class="wrap">
-        <label>{{info.label}}<i v-if="isNecessary">*</i>
-            <div class="arrow"></div>
-        </label>
-        <div class="select">
-            <el-select :filterable="isSearch" :value="value" :placeholder="info.placeholder" @change="changeValue">
-                <!--补个value不然值变了，但是不会回显-->
-                <el-option
-                        v-for="item in [{value: '', label: '请选择'}, ...optionArr]"
-                        :disabled="item.label=='请选择'"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-            </el-select>
-        </div>
+  <div class="wrap">
+    <label>{{ info.label }}<i v-if="isNecessary">*</i>
+      <div class="arrow" />
+    </label>
+    <div class="select">
+      <el-select
+        :filterable="isSearch"
+        :value="value"
+        :placeholder="info.placeholder"
+        @change="changeValue"
+      >
+        <!--补个value不然值变了，但是不会回显-->
+        <el-option
+          v-for="item in [{value: '', label: '请选择'}, ...optionArr]"
+          :key="item.value"
+          :disabled="item.label=='请选择'"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
     </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "selectItem",
-        props: {
-            value: '',//这里的默认值和option中的只能用空字符串表示默认未选择，不然Option的颜色会不一样
-            optionArr: {
-                default: [],
-                type: Array
-            },
-            info: null,
-            isSearch: {
-                default: false,
-                type: Boolean
-            },
-            isNecessary: {
-                default: false,
-                type: Boolean
-            }
-        },
-        model: {
-            prop: 'value',
-            event: 'valChange'
-        },
-        methods: {
-            changeValue(val) {
-                this.$emit('valChange', val)
-            }
-        }
+  export default {
+    name: "SelectItem",
+    model: {
+      prop: 'value',
+      event: 'valChange'
+    },
+    props: {
+      value: '',//这里的默认值和option中的只能用空字符串表示默认未选择，不然Option的颜色会不一样
+      optionArr: {
+        default: [],
+        type: Array
+      },
+      info: null,
+      isSearch: {
+        default: false,
+        type: Boolean
+      },
+      isNecessary: {
+        default: false,
+        type: Boolean
+      }
+    },
+    methods: {
+      changeValue(val) {
+        this.$emit('valChange', val)
+      }
     }
+  }
 </script>
 
 <style lang="less">

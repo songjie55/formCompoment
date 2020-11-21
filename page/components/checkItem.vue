@@ -1,43 +1,53 @@
 <template>
-    <div class="checkItem">
-        <label>{{info.label}}</label>
-        <ul>
-            <li :class="value?'active':''" @click="changeValue(true)">{{showType?'是':'有'}}</li>
-            <li :class="!value?'active':''" @click="changeValue(false)">{{showType?'否':'无'}}</li>
-        </ul>
-    </div>
+  <div class="checkItem">
+    <label>{{ info.label }}</label>
+    <ul>
+      <li
+        :class="value?'active':''"
+        @click="changeValue(true)"
+      >
+        {{ showType?'是':'有' }}
+      </li>
+      <li
+        :class="!value?'active':''"
+        @click="changeValue(false)"
+      >
+        {{ showType?'否':'无' }}
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "checkItem",
-        model: {
-            prop: 'value',
-            event: 'valChange'
-        },
-        props: {
-            value:false,
-            info: null,
-            isTravel: {
-                type: Boolean
-            },
-            showType: {
-                default: true,
-                type: Boolean
-            }
-        },
-        data() {
-            return {
-                showValue: false
-            }
-        },
-        methods: {
-            changeValue(value) {
-                this.showValue = value;
-                this.$emit('valChange', value)
-            }
-        }
+  export default {
+    name: "CheckItem",
+    model: {
+      prop: 'value',
+      event: 'valChange'
+    },
+    props: {
+      value: false,
+      info: null,
+      isTravel: {
+        type: Boolean
+      },
+      showType: {
+        default: true,
+        type: Boolean
+      }
+    },
+    data() {
+      return {
+        showValue: false
+      }
+    },
+    methods: {
+      changeValue(value) {
+        this.showValue = value;
+        this.$emit('valChange', value)
+      }
     }
+  }
 </script>
 
 <style scoped lang="less">

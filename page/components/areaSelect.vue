@@ -15,40 +15,40 @@
 </template>
 
 <script>
-    import {regionData, CodeToText} from 'element-china-area-data'
+  import { regionData, CodeToText } from 'element-china-area-data'
 
-    export default {
-        name: "AreaSelect",
-        model: {
-            prop: 'value',
-            event: 'valChange'
-        },
-        props: {
-            info: null,
-            isNecessary: {
-                default: false,
-                type: Boolean
-            }
-        },
-        data() {
-            return {
-                showValue: '',
-                options: regionData,
-            }
-        },
-        methods: {
-            changeValue(value) {
-                this.showValue = value
-                let name = '';
-                this.showValue.map(item => name += CodeToText[item])
-              // eslint-disable-next-line vue/custom-event-name-casing
-                this.$emit('valChange', name)
-            },
-            clearValue() {
+  export default {
+    name: "AreaSelect",
+    model: {
+      prop: 'value',
+      event: 'valChange'
+    },
+    props: {
+      info: null,
+      isNecessary: {
+        default: false,
+        type: Boolean
+      }
+    },
+    data() {
+      return {
+        showValue: '',
+        options: regionData
+      }
+    },
+    methods: {
+      changeValue(value) {
+        this.showValue = value
+        let name = '';
+        this.showValue.map(item => name += CodeToText[item])
+        // eslint-disable-next-line vue/custom-event-name-casing
+        this.$emit('valChange', name)
+      },
+      clearValue() {
 
-            }
-        }
+      }
     }
+  }
 </script>
 
 <style lang="less">
