@@ -9,7 +9,7 @@ const DllReferencePlugin = require('webpack/lib/DllReferencePlugin');//链接动
 const HappyPack = require('happypack');//多进程打包
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',//生产模式下默认开启tree shaking
   entry: {
     index: path.resolve(__dirname, 'main.js')
   },
@@ -84,13 +84,13 @@ module.exports = {
           name: 'vendor',
           test: /[\\/]node_modules[\\/]/,
           priority: -10,
-          chunks: "initial"
+          chunks: "all"
         },
         common: {
           name: `common`,
           minChunks: 2,
           priority: -20,
-          chunks: 'initial',
+          chunks: 'all',
           reuseExistingChunk: true
         }
       }

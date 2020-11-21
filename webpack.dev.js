@@ -86,16 +86,17 @@ module.exports = {
     devtool: 'hidden-source-map',
     optimization: {
         splitChunks: {
+            //代码分离
             cacheGroups: {
                 vendors: {
                     name: 'vendor',
-                    test: /[\\/]node_modules[\\/]/,
+                    test: /[\\/]node_modules[\\/]/,//把依赖包里面的代码分开打包
                     priority: -10,
-                    chunks: "initial"
+                    chunks: "all"//以async异步引入的才会被打包，initial是同步引入的,all是全部都匹配
                 },
                 common: {
-                    name: `common`,
-                    minChunks: 2,
+                    name: `common`,//把公共代码单独打包到commom分支里
+                    minChunks: 2,//引用两次及以上的才会打包进去
                     priority: -20,
                     chunks: 'initial',
                     reuseExistingChunk: true
