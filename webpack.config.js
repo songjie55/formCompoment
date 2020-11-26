@@ -1,13 +1,14 @@
 const path = require('path');
+const glob = require('glob');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');//压缩css
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');//分离css单独引用,这个loader不能喝style-loader一起用
+const PurgecssPlugin = require('purgecss-webpack-plugin')//利用tree-shaking来移除没有用到的css，这个插件必须和上面的分离css插件一起用
 const DllReferencePlugin = require('webpack/lib/DllReferencePlugin');//链接动态链接库，小项目依赖少的话不需要做动态链接库，不然反而会增加打包后的体积大小
 const HappyPack = require('happypack');//多进程打包
-
 module.exports = {
   mode: 'production',//生产模式下默认开启tree shaking
   entry: {
@@ -66,6 +67,29 @@ module.exports = {
               limit: 8192,
               outputPath: 'images',
               esModule: false//不然会出现[object module]
+            }
+          },
+          {
+            loader: 'image-webpack-loader',//图片压缩，压缩后的图片只能在网页里面打开了，配合压缩的js才能打开
+            options: {
+              mozjpeg: {
+                progressive: true
+              },
+              // optipng.enabled: false will disable optipng
+              optipng: {
+                enabled: false
+              },
+              pngquant: {
+                quality: [0.65, 0.90],
+                speed: 4
+              },
+              gifsicle: {
+                interlaced: false
+              },
+              // the webp option will enable WEBP
+              webp: {
+                quality: 75
+              }
             }
           }
         ]
@@ -152,10 +176,15 @@ module.exports = {
     new MiniCssExtractPlugin({//这个插件不能和热更一起用，会让Vue中style标签里面的样式不能热更，webpack5自带热更，不需要在plugins里面添加HMR
       filename: 'css/[name]-[hash].css'
     }),
+    //移除多余的css
+    new PurgecssPlugin({
+      //路径必须是绝对路径
+      paths: glob.sync(`${path.resolve(__dirname, 'page')}/**/*`, { nodir: true })
+    }),
     //css压缩
     new OptimizeCssAssetsWebpackPlugin({
-      assetNameRegExp:/\.css$/g,
-      cssProcessor:require('cssnano')
+      assetNameRegExp: /\.css$/g,
+      cssProcessor: require('cssnano')
     }),
     //js压缩
     new UglifyWebpackPlugin({
@@ -179,3 +208,5 @@ module.exports = {
     }
   }
 }
+
+

@@ -1,187 +1,188 @@
 <template>
-  <div class="contain">
-    <div class="formItem">
-      <h4>个人信息</h4>
-      <input-item
-        v-model="userInfo.name"
-        :info="formInfo.name"
-        is-necessary
-      />
-      <select-item
-        v-model="userInfo.certificatesType"
-        :info="formInfo.certificates"
-        :option-arr="optionArr"
-        is-necessary
-      />
-      <input-item
-        v-model="userInfo.certificatesNumber"
-        :info="formInfo.certificatesNumber"
-        is-necessary
-      />
-      <input-item
-        v-model="userInfo.age"
-        type="number"
-        :info="formInfo.age"
-        is-necessary
-      />
-      <input-item
-        v-model="userInfo.tel"
-        type="number"
-        :info="formInfo.tel"
-        is-necessary
-      >
-        <template #label>
-          <div class="whosePhone">
+    <div class="contain">
+        <img src="../static/123.jpg" alt="" style="width: 100%;">
+        <div class="formItem">
+            <h4>个人信息</h4>
+            <input-item
+                    v-model="userInfo.name"
+                    :info="formInfo.name"
+                    is-necessary
+            />
+            <select-item
+                    v-model="userInfo.certificatesType"
+                    :info="formInfo.certificates"
+                    :option-arr="optionArr"
+                    is-necessary
+            />
+            <input-item
+                    v-model="userInfo.certificatesNumber"
+                    :info="formInfo.certificatesNumber"
+                    is-necessary
+            />
+            <input-item
+                    v-model="userInfo.age"
+                    type="number"
+                    :info="formInfo.age"
+                    is-necessary
+            />
+            <input-item
+                    v-model="userInfo.tel"
+                    type="number"
+                    :info="formInfo.tel"
+                    is-necessary
+            >
+                <template #label>
+                    <div class="whosePhone">
             <span
-              :class="isUser?'active':''"
-              @click="isUser=true"
+                    :class="isUser?'active':''"
+                    @click="isUser=true"
             >用药者本人</span>
-            <span
-              :class="!isUser?'active':''"
-              @click="isUser=false"
-            >购药者</span>
-          </div>
-        </template>
-      </input-item>
-      <area-select
-        v-model="userInfo.area"
-        :info="formInfo.area"
-        is-necessary
-      />
-      <input-item
-        v-model="userInfo.detailAddress"
-        :info="formInfo.detailAddress"
-        is-necessary
-      />
+                        <span
+                                :class="!isUser?'active':''"
+                                @click="isUser=false"
+                        >购药者</span>
+                    </div>
+                </template>
+            </input-item>
+            <area-select
+                    v-model="userInfo.area"
+                    :info="formInfo.area"
+                    is-necessary
+            />
+            <input-item
+                    v-model="userInfo.detailAddress"
+                    :info="formInfo.detailAddress"
+                    is-necessary
+            />
+        </div>
+        <div class="formItem">
+            <h4>用药者来源情况<i>*</i></h4>
+            <el-radio-group v-model="userInfo.from">
+                <el-radio label="1">
+                    来自高风险地区
+                </el-radio>
+                <el-radio label="2">
+                    14天内到过中高风险地区
+                </el-radio>
+                <el-radio label="3">
+                    与来自中高风险地区人员密切接触
+                </el-radio>
+                <el-radio label="4">
+                    其他
+                </el-radio>
+            </el-radio-group>
+            <check-item
+                    v-model="userInfo.isTravel"
+                    :info="formInfo.isTravel"
+                    :show-type="false"
+            />
+        </div>
+        <div class="formItem">
+            <h4>症状<i>*</i></h4>
+            <check-item
+                    v-model="userInfo.isFever"
+                    :info="formInfo.isFever"
+            />
+            <check-item
+                    v-model="userInfo.isCough"
+                    :info="formInfo.isCough"
+            />
+            <check-item
+                    v-model="userInfo.isOther"
+                    :info="formInfo.isOther"
+            />
+            <check-item
+                    v-model="userInfo.isSeeD"
+                    :info="formInfo.isSeeD"
+            />
+        </div>
+        <div class="formItem">
+            <h4>紧急联系人</h4>
+            <input-item
+                    v-model="userInfo.emergency"
+                    :info="formInfo.emergency"
+                    is-necessary
+            />
+            <input-item
+                    v-model="userInfo.emergencyPhone"
+                    :info="formInfo.emergencyPhone"
+                    is-necessary
+                    type="number"
+            />
+        </div>
+        <div class="formItem">
+            <h4>购药信息</h4>
+            <select-item
+                    v-model="userInfo.drugName"
+                    :info="formInfo.drugName"
+                    :option-arr="drugArr"
+                    is-search
+                    is-necessary
+            />
+            <date-select
+                    v-model="userInfo.buyTime"
+                    :info="formInfo.buyTime"
+                    is-necessary
+            />
+            <select-item
+                    v-model="userInfo.drugstore"
+                    :info="formInfo.drugstore"
+                    :option-arr="storeArr"
+                    is-search
+                    is-necessary
+            />
+            <area-select
+                    v-model="userInfo.storeAddress"
+                    :info="formInfo.storeAddress"
+                    is-necessary
+            />
+            <input-item
+                    v-model="userInfo.storeAddressDetail"
+                    :info="formInfo.storeAddressDetail"
+                    is-necessary
+            />
+            <input-item
+                    v-model="userInfo.storeManager"
+                    :info="formInfo.storeManager"
+                    is-necessary
+            />
+            <input-item
+                    v-model="userInfo.storePhone"
+                    type="number"
+                    :info="formInfo.storePhone"
+                    is-necessary
+            />
+            <input-item
+                    v-model="userInfo.note"
+                    :info="formInfo.note"
+            />
+            <button
+                    class="submitBtn"
+                    @click="validateForm"
+            >
+                提交
+            </button>
+        </div>
+        <div
+                v-if="isSubmitForm"
+                class="resultBox"
+        >
+            <img
+                    :src="isSuccess?sucImg:failImg"
+                    alt=""
+            >
+            <p>提交{{ isSuccess?'成功':'失败' }}</p>
+        </div>
+        <div
+                class="errorMsg"
+                :class="isError?'showMsg':''"
+        >
+            <p>{{ errorMsg }}</p>
+            <button @click="isError=false">
+                确定
+            </button>
+        </div>
     </div>
-    <div class="formItem">
-      <h4>用药者来源情况<i>*</i></h4>
-      <el-radio-group v-model="userInfo.from">
-        <el-radio label="1">
-          来自高风险地区
-        </el-radio>
-        <el-radio label="2">
-          14天内到过中高风险地区
-        </el-radio>
-        <el-radio label="3">
-          与来自中高风险地区人员密切接触
-        </el-radio>
-        <el-radio label="4">
-          其他
-        </el-radio>
-      </el-radio-group>
-      <check-item
-        v-model="userInfo.isTravel"
-        :info="formInfo.isTravel"
-        :show-type="false"
-      />
-    </div>
-    <div class="formItem">
-      <h4>症状<i>*</i></h4>
-      <check-item
-        v-model="userInfo.isFever"
-        :info="formInfo.isFever"
-      />
-      <check-item
-        v-model="userInfo.isCough"
-        :info="formInfo.isCough"
-      />
-      <check-item
-        v-model="userInfo.isOther"
-        :info="formInfo.isOther"
-      />
-      <check-item
-        v-model="userInfo.isSeeD"
-        :info="formInfo.isSeeD"
-      />
-    </div>
-    <div class="formItem">
-      <h4>紧急联系人</h4>
-      <input-item
-        v-model="userInfo.emergency"
-        :info="formInfo.emergency"
-        is-necessary
-      />
-      <input-item
-        v-model="userInfo.emergencyPhone"
-        :info="formInfo.emergencyPhone"
-        is-necessary
-        type="number"
-      />
-    </div>
-    <div class="formItem">
-      <h4>购药信息</h4>
-      <select-item
-        v-model="userInfo.drugName"
-        :info="formInfo.drugName"
-        :option-arr="drugArr"
-        is-search
-        is-necessary
-      />
-      <date-select
-        v-model="userInfo.buyTime"
-        :info="formInfo.buyTime"
-        is-necessary
-      />
-      <select-item
-        v-model="userInfo.drugstore"
-        :info="formInfo.drugstore"
-        :option-arr="storeArr"
-        is-search
-        is-necessary
-      />
-      <area-select
-        v-model="userInfo.storeAddress"
-        :info="formInfo.storeAddress"
-        is-necessary
-      />
-      <input-item
-        v-model="userInfo.storeAddressDetail"
-        :info="formInfo.storeAddressDetail"
-        is-necessary
-      />
-      <input-item
-        v-model="userInfo.storeManager"
-        :info="formInfo.storeManager"
-        is-necessary
-      />
-      <input-item
-        v-model="userInfo.storePhone"
-        type="number"
-        :info="formInfo.storePhone"
-        is-necessary
-      />
-      <input-item
-        v-model="userInfo.note"
-        :info="formInfo.note"
-      />
-      <button
-        class="submitBtn"
-        @click="validateForm"
-      >
-        提交
-      </button>
-    </div>
-    <div
-      v-if="isSubmitForm"
-      class="resultBox"
-    >
-      <img
-        :src="isSuccess?sucImg:failImg"
-        alt=""
-      >
-      <p>提交{{ isSuccess?'成功':'失败' }}</p>
-    </div>
-    <div
-      class="errorMsg"
-      :class="isError?'showMsg':''"
-    >
-      <p>{{ errorMsg }}</p>
-      <button @click="isError=false">
-        确定
-      </button>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -542,5 +543,10 @@
         z-index: 100;
         transform: translate(-50%, -50%);
         visibility: visible;
+    }
+
+    .unused-css {
+        //测试
+        color: blue;
     }
 </style>
