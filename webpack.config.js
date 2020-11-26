@@ -6,9 +6,10 @@ const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');//压缩css
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');//分离css单独引用,这个loader不能喝style-loader一起用
-const PurgecssPlugin = require('purgecss-webpack-plugin')//利用tree-shaking来移除没有用到的css，这个插件必须和上面的分离css插件一起用
+const PurgeCSSPlugin = require('purgecss-webpack-plugin')//利用tree-shaking来移除没有用到的css，这个插件必须和上面的分离css插件一起用
 const DllReferencePlugin = require('webpack/lib/DllReferencePlugin');//链接动态链接库，小项目依赖少的话不需要做动态链接库，不然反而会增加打包后的体积大小
 const HappyPack = require('happypack');//多进程打包
+
 module.exports = {
   mode: 'production',//生产模式下默认开启tree shaking
   entry: {
@@ -177,7 +178,7 @@ module.exports = {
       filename: 'css/[name]-[hash].css'
     }),
     //移除多余的css
-    new PurgecssPlugin({
+    new PurgeCSSPlugin({
       //路径必须是绝对路径
       paths: glob.sync(`${path.resolve(__dirname, 'page')}/**/*`, { nodir: true })
     }),
