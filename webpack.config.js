@@ -1,5 +1,5 @@
 const path = require('path');
-const glob = require('glob');
+const glob = require('glob-all');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin');
@@ -9,7 +9,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');//分离css单�
 const PurgeCSSPlugin = require('purgecss-webpack-plugin')//利用tree-shaking来移除没有用到的css，这个插件必须和上面的分离css插件一起用
 const DllReferencePlugin = require('webpack/lib/DllReferencePlugin');//链接动态链接库，小项目依赖少的话不需要做动态链接库，不然反而会增加打包后的体积大小
 const HappyPack = require('happypack');//多进程打包
-
 module.exports = {
   mode: 'production',//生产模式下默认开启tree shaking
   entry: {
@@ -179,8 +178,9 @@ module.exports = {
     }),
     //移除多余的css
     new PurgeCSSPlugin({
+      content:['./dist/index/html'],
       //路径必须是绝对路径
-      paths: glob.sync(`${path.resolve(__dirname, 'page')}/**/*`, { nodir: true })
+      paths: glob.sync([`${path.join(__dirname, 'page')}/**/*`,`${path.join(__dirname, 'page')}/*`], { nodir: true })
     }),
     //css压缩
     new OptimizeCssAssetsWebpackPlugin({
