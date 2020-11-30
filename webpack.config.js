@@ -179,7 +179,7 @@ module.exports = {
     //移除多余的css
     new PurgeCSSPlugin({
       content:['./dist/index/html'],
-      //路径必须是绝对路径
+      //路径必须是绝对路径,有个BUG去除不掉index.vue里面的多余css
       paths: glob.sync([`${path.join(__dirname, 'page')}/**/*`,`${path.join(__dirname, 'page')}/*`], { nodir: true })
     }),
     //css压缩
