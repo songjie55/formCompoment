@@ -1,7 +1,7 @@
 let mixinOptions = {
     data() {
-        return {baseUrl: 'http://fuzgxqmsp.cn'}
-        // return {baseUrl: 'http://192.168.1.22:7070'}
+        // return {baseUrl: 'http://fuzgxqmsp.cn'}
+        return {baseUrl: 'http://192.168.7.166'}
     },
     beforeCreate() {
         let vw = document.body.clientWidth,

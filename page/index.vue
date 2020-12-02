@@ -96,411 +96,424 @@
 </template>
 
 <script>
-    import inputItem from './components/inputItem'
-    import selectItem from "./components/selectItem";
-    import areaSelect from "./components/areaSelect";
-    import checkItem from "./components/checkItem";
-    import dateSelect from "./components/dateSelect";
-    import headerSearch from "./components/header";
-    import Schema from 'async-validator'
-    import {CodeToText, regionData} from 'element-china-area-data'
+  import inputItem from './components/inputItem'
+  import selectItem from "./components/selectItem";
+  import areaSelect from "./components/areaSelect";
+  import checkItem from "./components/checkItem";
+  import dateSelect from "./components/dateSelect";
+  import headerSearch from "./components/header";
+  import Schema from 'async-validator'
+  import { CodeToText, regionData } from 'element-china-area-data'
 
-    export default {
-        name: "index",
-        components: {inputItem, selectItem, areaSelect, checkItem, dateSelect, headerSearch},
-        data() {
-            return {
-                from: 'add',
-                //
-                placeholder1: '请选择地址',
-                placeholder: '',
-                isChangeStoreAddress: false,
-                isError: false,
-                isSumbiting: false,
-                errorMsg: '错误提示语',
-                isNotOther: false,
-                isOther: false,
-                isShowDetail: false,
-                isUser: true,
-                bannerImg: require("../static/banner.png"),
-                sucImg: require("../static/success.jpg"),
-                failImg: require("../static/fail.jpg"),
-                isSuccess: true,
-                isSubmitForm: false,
-                optionArr: [
-                    {label: '居民身份证', value: 1},
-                    {label: '居民户口簿', value: 2},
-                    {label: '护照', value: 3},
-                    {label: '军官证', value: 4},
-                    {label: '驾驶证', value: 5},
-                    {label: '港澳居民来往内地通行证', value: 6}
-                ],
-                fuzhouOptions: [{label: '', children: [], value: '1'}],
-                optionsArr1: regionData,
-                drugArr: [],
-                storeArr: [],
-                formInfo: {
-                    drugUserName: {label: '用药者姓名', placeholder: '请输入用药者姓名'},
-                    certificates: {label: '用药者证件', placeholder: '请选择'},
-                    area: {label: '目前居住地址', placeholder: '请选择地址'},
-                    idCard: {label: '证件号码', placeholder: '请输入用药者证件号码'},
-                    userAge: {label: '年龄', placeholder: '请输入用药者的年龄'},
-                    userPhone: {label: '联系电话', placeholder: '请输入联系电话'},
-                    userAddress: {label: '详细地址', placeholder: '请输入详细地址'},
-                    userSex: {label: '性别'},
-                    isTravel: {label: '境外旅居史'},
-                    isFever: {label: '发烧'},
-                    isCough: {label: '咳嗽'},
-                    isOther: {label: '其他'},
-                    isSeeD: {label: '是否到医院就诊'},
-                    emergencyContact: {label: '紧急联系人', placeholder: '请输入紧急联系人姓名'},
-                    emergencyPhone: {label: '紧急联系人电话', placeholder: '请输入紧急联系人电话'},
-                    drugNames: {label: '购买药品名称', placeholder: '请输入关键字(例如:批准文号+药名+厂家+规格)'},
-                    purchaseTime: {label: '购买时间', placeholder: '请选择购买时间'},
-                    storeName: {label: '药店名称', placeholder: '请输入药店名称'},
-                    storeAddress: {label: '药店地址', placeholder: '请选择药店地址'},
-                    storeAddressDetail: {label: '药店详细地址', placeholder: '请输入药店详细地址'},
-                    storeContact: {label: '药店联系人', placeholder: '请输入药店联系人'},
-                    storeContactPhone: {label: '药店联系人电话', placeholder: '请输入药店联系人电话'},
-                    remark: {label: '备注', placeholder: '备注信息'},
-                },
-                userInfo: {
-                    drugUserName: null,
-                    from: [],
-                    certificatesType: null,
-                    idCard: '',
-                    userAge: '',
-                    area: '',
-                    userPhone: '',
-                    userAddress: '',
-                    userSex: false,
-                    isTravel: false,
-                    isFever: false,
-                    isCough: false,
-                    isOther: false,
-                    isSeeD: false,
-                    emergencyContact: '',
-                    emergencyPhone: '',
-                    drugNames: null,
-                    purchaseTime: null,
-                    storeName: null,
-                    storeCode: '',
-                    storeAddress: [],
-                    storeAddressDetail: '',
-                    storeContact: '',
-                    storeContactPhone: '',
-                    remark: '',
-                }
-            }
+  export default {
+    name: "index",
+    components: { inputItem, selectItem, areaSelect, checkItem, dateSelect, headerSearch },
+    data() {
+      return {
+        from: 'add',
+        //
+        placeholder1: '请选择地址',
+        placeholder: '',
+        isChangeStoreAddress: false,
+        isError: false,
+        isSumbiting: false,
+        errorMsg: '错误提示语',
+        isNotOther: false,
+        isOther: false,
+        isShowDetail: false,
+        isUser: true,
+        bannerImg: require("../static/banner.png"),
+        sucImg: require("../static/success.jpg"),
+        failImg: require("../static/fail.jpg"),
+        isSuccess: true,
+        isSubmitForm: false,
+        optionArr: [
+          { label: '居民身份证', value: 1 },
+          { label: '居民户口簿', value: 2 },
+          { label: '护照', value: 3 },
+          { label: '军官证', value: 4 },
+          { label: '驾驶证', value: 5 },
+          { label: '港澳居民来往内地通行证', value: 6 }
+        ],
+        fuzhouOptions: [{ label: '', children: [], value: '1' }],
+        optionsArr1: regionData,
+        drugArr: [],
+        storeArr: [],
+        formInfo: {
+          drugUserName: { label: '用药者姓名', placeholder: '请输入用药者姓名' },
+          certificates: { label: '用药者证件', placeholder: '请选择' },
+          area: { label: '目前居住地址', placeholder: '请选择地址' },
+          idCard: { label: '证件号码', placeholder: '请输入用药者证件号码' },
+          userAge: { label: '年龄', placeholder: '请输入用药者的年龄' },
+          userPhone: { label: '联系电话', placeholder: '请输入联系电话' },
+          userAddress: { label: '详细地址', placeholder: '请输入详细地址' },
+          userSex: { label: '性别' },
+          isTravel: { label: '境外旅居史' },
+          isFever: { label: '发烧' },
+          isCough: { label: '咳嗽' },
+          isOther: { label: '其他' },
+          isSeeD: { label: '是否到医院就诊' },
+          emergencyContact: { label: '紧急联系人', placeholder: '请输入紧急联系人姓名' },
+          emergencyPhone: { label: '紧急联系人电话', placeholder: '请输入紧急联系人电话' },
+          drugNames: { label: '购买药品名称', placeholder: '请输入关键字(例如:批准文号+药名+厂家+规格)' },
+          purchaseTime: { label: '购买时间', placeholder: '请选择购买时间' },
+          storeName: { label: '药店名称', placeholder: '请输入药店名称' },
+          storeAddress: { label: '药店地址', placeholder: '请选择药店地址' },
+          storeAddressDetail: { label: '药店详细地址', placeholder: '请输入药店详细地址' },
+          storeContact: { label: '药店联系人', placeholder: '请输入药店联系人' },
+          storeContactPhone: { label: '药店联系人电话', placeholder: '请输入药店联系人电话' },
+          remark: { label: '备注', placeholder: '备注信息' }
         },
-        watch: {
-            isUser() {
-                this.userInfo.area = []
-            }
-        },
-        mounted() {
-            if (window.location.href.indexOf('?') > -1 && window.location.href.split('?')[1].indexOf('id=') > -1) {
-                this.isShowDetail = true;
-                let id = window.location.href.split('?')[1].split('=')[1];
-                this.searchDetail(id)
-                this.from = 'detail'
-            } else {
-                let resArr = JSON.parse(JSON.stringify(regionData.filter(i => i.label === '福建省')))
-                resArr[0].children = resArr[0].children.filter(i => i.label === '福州市')
-                this.fuzhouOptions = resArr;
-                this.userInfo.area = "";
-                //获取药店信息
-                this.getStoreDetail()
-            }
-
-        },
-        methods: {
-            changePhoneType(type = true) {
-                if (this.isShowDetail) return false
-                this.isUser = type;
-            },
-            searchDetail(id) {
-                this.axios({
-                    method: 'post',
-                    url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/queryDrugsaleRegList`,
-                    data: {id: id, pageNum: '1'}
-                }).then(res => {
-                    let data = res.data.data[0]
-                    this.isUser = data.isUserPhone === '1'
-                    this.userInfo = Object.assign(this.userInfo, data)
-                    this.placeholder = [data.storeProvince, data.storeCity, data.storeCounty].join('/');
-                    this.userInfo.storeAddressDetail = data.storeAddress;
-                    this.placeholder1 = [data.province, data.city, data.county].join('/');
-                    this.$nextTick(() => {
-                        this.userInfo.from = [];
-                        if (data.isFromHighRisk === '是') this.userInfo.from.push('1')
-                        if (data.isToHighRiskIn14 === '是') this.userInfo.from.push('2')
-                        if (data.isCloseWithHighPeople === '是') this.userInfo.from.push('3')
-                        if (data.isOtherSource === '是') this.userInfo.from.push('4')
-                        if (data.isOtherSource === '是' || data.isFromHighRisk === '是' || data.isToHighRiskIn14 === '是' || data.isCloseWithHighPeople === '是') {
-                            this.isOther = true;
-                        }
-                        if (data.isOtherSource === '是') {
-                            this.isNotOther = true;
-                        }
-                        this.userInfo.isCough = data.isCoughSymptoms === '是';
-                        this.userInfo.isFever = data.isFeverSymptoms === '是';
-                        this.userInfo.isSeeD = data.isVisitedHospital === '是';
-                        this.userInfo.isOther = data.isOtherSymptoms === '是';
-                        this.formInfo.drugNames.placeholder = this.userInfo.drugNames;
-                        this.userInfo.userSex = data.userSex === '男'
-                        this.userInfo.isTravel = data.hasOverseaTravelHis === '有';
-                    })
-
-                }).catch((e) => {
-                    console.log(e)
-                })
-            },
-            changeFrom() {
-                if (this.userInfo.from.length > 0) {
-                    if (this.userInfo.from.find(i => i === '4')) {
-                        this.isOther = false;
-                        this.isNotOther = true;
-                    } else {
-                        this.isOther = true;
-                        this.isNotOther = false;
-                    }
-                } else {
-                    this.isOther = false;
-                    this.isNotOther = false;
-                }
-            },
-            decryptCode(list) {
-                let name = '';
-                list.map(item => name += CodeToText[item] + '/')
-                return name
-            },
-            showErrorMsg(msg) {
-                this.isError = true;
-                this.errorMsg = msg;
-            },
-            getStoreDetail() {
-                this.axios({
-                    method: 'get',
-                    url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/quenyCompNameToCompany`,
-                }).then(res => {
-                    let data = res.data.data
-                    this.userInfo.storeName = data.compName;
-                    this.userInfo.storeCode = data.storeCode;
-                    this.placeholder = [data.storeProvince, data.storeCity, data.storeCounty].join('/');
-                    this.userInfo.storeAddressDetail = data.storeAddress;
-                })
-            },
-            getOptionArr(obj) {
-                if (obj) {
-                    let data = {regNumb: '', drugNameChn: '', produceCompany: '', drugSpec: ''};
-                    if (obj.value.indexOf('+') > -1) {
-                        let arr = obj.value.split('+');
-                        if (arr.length === 4) {
-                            data.regNumb = arr[0]
-                            data.drugNameChn = arr[1]
-                            data.produceCompany = arr[2]
-                            data.drugSpec = arr[3]
-                        }
-                        if (arr.length === 3) {
-                            data.regNumb = arr[0]
-                            data.drugNameChn = arr[1]
-                            data.produceCompany = arr[2]
-                        }
-                        if (arr.length === 2) {
-                            data.regNumb = arr[0]
-                            data.drugNameChn = arr[1]
-                        }
-                    } else {
-                        if (obj.value.length < 8) return false;
-                        data.regNumb = obj.value;
-                    }
-                    this.axios({
-                        method: 'post',
-                        url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/quenyDrugToName`,
-                        data: data,
-                    }).then(res => {
-                        if (res.data.data.length > 1000) {
-                            this.showErrorMsg('查询结果过多，请添加关键词进行匹配')
-                            return false
-                        }
-                        this.drugArr = res.data.data;
-                    })
-                }
-            },
-            validateForm() {
-                if (this.isSumbiting) {
-                    return false;
-                }
-                const descriptor = {
-                    drugUserName: {
-                        type: 'string',
-                        required: true,
-                        Pattern: /\S/g,
-                        message: '请输入正确姓名'
-                    },
-                    certificatesType: {
-                        required: true,
-                        message: '请选择证件类型',
-                        validator: (rule, value) => value !== null && value !== ''
-                    },
-                    idCard: {
-                        required: true,
-                        message: '请输入正确证件号码',
-                        Pattern: /\S/g
-                    },
-                    userAge: {
-                        required: true,
-                        message: '请输入正确年龄',
-                    },
-                    userPhone: {
-                        required: true,
-                        message: '请输入正确联系电话',
-                        validator: (rule, value) => {
-                            return (/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) || (/0\d{2,3}-[1-9]\d{6,7}/.test(value))
-                        }
-                    },
-                    area: {
-                        required: true,
-                        message: '请选择居住地区域',
-                        validator: (rule, value) => value !== null && value !== ''
-                    },
-                    userAddress: {
-                        type: 'string',
-                        required: true,
-                        Pattern: /\S/g,
-                        message: '请输入详细地址'
-                    },
-                    from: {
-                        required: true,
-                        message: '请选择来源情况',
-                        validator: (rule, value) => value !== null && value !== ''
-                    },
-                    emergencyContact: {
-                        type: 'string',
-                        required: true,
-                        Pattern: /\S/g,
-                        message: '请输入紧急联系人姓名'
-                    },
-                    emergencyPhone: {
-                        required: true,
-                        message: '请输入正确紧急联系人电话',
-                        validator: (rule, value) => {
-                            return (/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) || (/0\d{2,3}-[1-9]\d{6,7}/.test(value))
-                        }
-                    },
-                    drugNames: {
-                        required: true,
-                        message: '请选择购买药品名称',
-                        validator: (rule, value) => value !== null && value !== ''
-                    },
-                    purchaseTime: {
-                        required: true,
-                        message: '请选择购药时间',
-                        validator: (rule, value) => value !== null && value !== ''
-                    },
-                    storeName: {
-                        required: true,
-                        message: '请选择药店名称',
-                        validator: (rule, value) => value !== null && value !== ''
-                    },
-                    storeAddress: {
-                        required: true,
-                        message: '请选择药店所属区域',
-                        validator: (rule, value) => value !== null && value !== ''
-                    },
-                    storeAddressDetail: {
-                        type: 'string',
-                        required: true,
-                        Pattern: /\S/g,
-                        message: '请输入药店详细地址'
-                    },
-                    storeContact: {
-                        type: 'string',
-                        required: true,
-                        Pattern: /\S/g,
-                        message: '请输入药店联系人姓名'
-                    },
-                    storeContactPhone: {
-                        required: true,
-                        message: '请输入正确药店联系人电话',
-                        validator: (rule, value) => {
-                            return (/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) || (/0\d{2,3}-[1-9]\d{6,7}/.test(value))
-                        }
-                    }
-                };
-                const validator = new Schema(descriptor);
-                validator.validate(this.userInfo, {first: true}).then(() => {
-                    console.log('passed')
-                    this.postForm();
-                }).catch(({errors, fields}) => {
-                    this.showErrorMsg(`${errors[0].message}`)
-                })
-            },
-            postForm() {
-                if (this.isShowDetail) {
-                    return false;
-                }
-                this.isSumbiting = true;
-                let obj = {};
-                obj.drugUserName = this.userInfo.drugUserName;
-                obj.idCard = this.userInfo.idCard;
-                obj.userAge = this.userInfo.userAge;
-                obj.userSex = this.userInfo.userSex ? 'F' : 'M';
-                obj.userPhone = this.userInfo.userPhone;
-                obj.isUserPhone = this.isUser ? 1 : 0;
-                obj.isFromHighRisk = this.userInfo.from.find(i => i === '1') !== undefined ? 1 : 0;
-                obj.isCloseWithHighPeople = this.userInfo.from.find(i => i === '3') !== undefined ? 1 : 0;
-                obj.isOtherSource = this.userInfo.from.find(i => i === '4') !== undefined ? 1 : 0;
-                obj.isToHighRiskIn14 = this.userInfo.from.find(i => i === '2') !== undefined ? 1 : 0;
-                obj.hasOverseaTravelHis = this.userInfo.isTravel ? '1' : '2';
-                obj.isFeverSymptoms = this.userInfo.isFever ? '1' : '0';
-                obj.isCoughSymptoms = this.userInfo.isCough ? '1' : '0';
-                obj.isOtherSymptoms = this.userInfo.isOther ? '1' : '0';
-                obj.isVisitedHospital = this.userInfo.isSeeD ? '1' : '0';
-                obj.emergencyContact = this.userInfo.emergencyContact;
-                obj.emergencyPhone = this.userInfo.emergencyPhone;
-                obj.purchaseTime = this.userInfo.purchaseTime;
-                let list = []
-                this.userInfo.drugNames.map(i => {
-                    let arr = i.split('+');
-                    list.push({id: arr[0], name: arr[1]})
-                })
-                obj.drugList = list;
-                obj.storeContact = this.userInfo.storeContact;
-                obj.storeContactPhone = this.userInfo.storeContactPhone;
-                obj.remark = this.userInfo.remark;
-                obj.userAddress = this.userInfo.userAddress;
-                obj.storeAddress = this.userInfo.storeAddressDetail;
-                obj.provinceCode = this.userInfo.area[0];
-                obj.cityCode = this.userInfo.area[1];
-                obj.countyCode = this.userInfo.area[2];
-                let address1 = this.decryptCode(this.userInfo.area).split('/')
-                let address2 = this.isChangeStoreAddress ? this.decryptCode(this.userInfo.storeAddress).split('/') : this.placeholder.split('/')
-                obj.storeCode = this.userInfo.storeCode;
-                obj.storeName = this.userInfo.storeName;
-                obj.province = address1[0]
-                obj.storeProvince = address2[0]
-                obj.city = address1[1]
-                obj.storeCity = address2[1]
-                if (address1.length > 2) {
-                    obj.county = address1[2]
-                }
-                if (address2.length > 2) {
-                    obj.storeCounty = address2[2]
-                }
-                this.axios({
-                    method: 'post',
-                    url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/saveDrug`,
-                    data: obj
-                }).then(res => {
-                    this.isSubmitForm = true;
-                    this.isSuccess = res.data.data >= 1
-                    this.isSumbiting = false;
-                })
-            }
+        userInfo: {
+          drugUserName: null,
+          from: [],
+          certificatesType: null,
+          idCard: '',
+          userAge: '',
+          area: '',
+          userPhone: '',
+          userAddress: '',
+          userSex: false,
+          isTravel: false,
+          isFever: false,
+          isCough: false,
+          isOther: false,
+          isSeeD: false,
+          emergencyContact: '',
+          emergencyPhone: '',
+          drugNames: null,
+          purchaseTime: null,
+          storeName: null,
+          storeCode: '',
+          storeAddress: [],
+          storeAddressDetail: '',
+          storeContact: '',
+          storeContactPhone: '',
+          remark: '',
+          requestId: null
         }
+      }
+    },
+    watch: {
+      isUser() {
+        this.userInfo.area = []
+      }
+    },
+    mounted() {
+      if (window.location.href.indexOf('?') > -1 && window.location.href.split('?')[1].indexOf('id=') > -1) {
+        this.isShowDetail = true;
+        let id = window.location.href.split('?')[1].split('=')[1];
+        this.searchDetail(id)
+        this.from = 'detail'
+      } else {
+        let resArr = JSON.parse(JSON.stringify(regionData.filter(i => i.label === '福建省')))
+        resArr[0].children = resArr[0].children.filter(i => i.label === '福州市')
+        this.fuzhouOptions = resArr;
+        this.userInfo.area = "";
+        //获取药店信息
+        this.getStoreDetail()
+      }
+
+    },
+    methods: {
+      changePhoneType(type = true) {
+        if (this.isShowDetail) return false
+        this.isUser = type;
+      },
+      searchDetail(id) {
+        this.axios({
+          method: 'post',
+          url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/queryDrugsaleRegList`,
+          data: { id: id, pageNum: '1' }
+        }).then(res => {
+          let data = res.data.data[0]
+          this.isUser = data.isUserPhone === '1'
+          this.userInfo = Object.assign(this.userInfo, data)
+          this.placeholder = [data.storeProvince, data.storeCity, data.storeCounty].join('/');
+          this.userInfo.storeAddressDetail = data.storeAddress;
+          this.placeholder1 = [data.province, data.city, data.county].join('/');
+          this.$nextTick(() => {
+            this.userInfo.from = [];
+            if (data.isFromHighRisk === '是') this.userInfo.from.push('1')
+            if (data.isToHighRiskIn14 === '是') this.userInfo.from.push('2')
+            if (data.isCloseWithHighPeople === '是') this.userInfo.from.push('3')
+            if (data.isOtherSource === '是') this.userInfo.from.push('4')
+            if (data.isOtherSource === '是' || data.isFromHighRisk === '是' || data.isToHighRiskIn14 === '是' || data.isCloseWithHighPeople === '是') {
+              this.isOther = true;
+            }
+            if (data.isOtherSource === '是') {
+              this.isNotOther = true;
+            }
+            this.userInfo.isCough = data.isCoughSymptoms === '是';
+            this.userInfo.isFever = data.isFeverSymptoms === '是';
+            this.userInfo.isSeeD = data.isVisitedHospital === '是';
+            this.userInfo.isOther = data.isOtherSymptoms === '是';
+            this.formInfo.drugNames.placeholder = this.userInfo.drugNames;
+            this.userInfo.userSex = data.userSex === '男'
+            this.userInfo.isTravel = data.hasOverseaTravelHis === '有';
+          })
+
+        }).catch((e) => {
+          console.log(e)
+        })
+      },
+      changeFrom() {
+        if (this.userInfo.from.length > 0) {
+          if (this.userInfo.from.find(i => i === '4')) {
+            this.isOther = false;
+            this.isNotOther = true;
+          } else {
+            this.isOther = true;
+            this.isNotOther = false;
+          }
+        } else {
+          this.isOther = false;
+          this.isNotOther = false;
+        }
+      },
+      decryptCode(list) {
+        let name = '';
+        list.map(item => name += CodeToText[item] + '/')
+        return name
+      },
+      showErrorMsg(msg) {
+        this.isError = true;
+        this.errorMsg = msg;
+      },
+      getStoreDetail() {
+        this.axios({
+          method: 'get',
+          url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/quenyCompNameToCompany`
+        }).then(res => {
+          let data = res.data.data
+          this.userInfo.storeName = data.compName;
+          this.userInfo.storeCode = data.storeCode;
+          this.placeholder = [data.storeProvince, data.storeCity, data.storeCounty].join('/');
+          this.userInfo.storeAddressDetail = data.storeAddress;
+        })
+      },
+      getOptionArr(obj) {
+        if (obj) {
+          //取消上一次的查询药品options请求
+          if (this.requestId && this.requestId.cancel) {
+            this.requestId.cancel()
+          }
+          let data = { regNumb: '', drugNameChn: '', produceCompany: '', drugSpec: '' };
+          if (obj.value.indexOf('+') > -1) {
+            let arr = obj.value.split('+');
+            if (arr.length === 4) {
+              data.regNumb = arr[0]
+              data.drugNameChn = arr[1]
+              data.produceCompany = arr[2]
+              data.drugSpec = arr[3]
+            }
+            if (arr.length === 3) {
+              data.regNumb = arr[0]
+              data.drugNameChn = arr[1]
+              data.produceCompany = arr[2]
+            }
+            if (arr.length === 2) {
+              data.regNumb = arr[0]
+              data.drugNameChn = arr[1]
+            }
+          } else {
+            if (obj.value.length < 8) return false;
+            data.regNumb = obj.value;
+          }
+          this.requestId = this.axios.CancelToken.source();
+          this.axios({
+            method: 'post',
+            url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/quenyDrugToName`,
+            data: data,
+            cancelToken: this.requestId.token
+          }).then(res => {
+            if (res.data.data.length > 1000) {
+              this.showErrorMsg('查询结果过多，请添加关键词进行匹配')
+              return false
+            }
+            this.drugArr = res.data.data;
+          })
+        }
+      },
+      validateForm() {
+        if (this.isSumbiting) {
+          return false;
+        }
+        const descriptor = {
+          drugUserName: {
+            type: 'string',
+            required: true,
+            Pattern: /\S/g,
+            message: '请输入正确姓名'
+          },
+          certificatesType: {
+            required: true,
+            message: '请选择证件类型',
+            validator: (rule, value) => value !== null && value !== ''
+          },
+          idCard: {
+            required: true,
+            message: '请输入正确证件号码',
+            validator: (rule, value) => {
+              if (this.userInfo.certificatesType == '居民身份证') {
+                return /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/.test(value)
+              } else {
+                return /\S/g.test(value)
+              }
+            }
+          },
+          userAge: {
+            required: true,
+            message: '请输入正确年龄'
+          },
+          userPhone: {
+            required: true,
+            message: '请输入正确联系电话',
+            validator: (rule, value) => {
+              return (/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) || (/0\d{2,3}-[1-9]\d{6,7}/.test(value))
+            }
+          },
+          area: {
+            required: true,
+            message: '请选择居住地区域',
+            validator: (rule, value) => value !== null && value !== ''
+          },
+          userAddress: {
+            type: 'string',
+            required: true,
+            Pattern: /\S/g,
+            message: '请输入详细地址'
+          },
+          from: {
+            required: true,
+            message: '请选择来源情况',
+            validator: (rule, value) => value !== null && value !== ''
+          },
+          emergencyContact: {
+            type: 'string',
+            required: true,
+            Pattern: /\S/g,
+            message: '请输入紧急联系人姓名'
+          },
+          emergencyPhone: {
+            required: true,
+            message: '请输入正确紧急联系人电话',
+            validator: (rule, value) => {
+              return (/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) || (/0\d{2,3}-[1-9]\d{6,7}/.test(value))
+            }
+          },
+          drugNames: {
+            required: true,
+            message: '请选择购买药品名称',
+            validator: (rule, value) => value !== null && value !== '' && value.length > 0
+          },
+          purchaseTime: {
+            required: true,
+            message: '请选择购药时间',
+            validator: (rule, value) => value !== null && value !== ''
+          },
+          storeName: {
+            required: true,
+            message: '请选择药店名称',
+            validator: (rule, value) => value !== null && value !== ''
+          },
+          storeAddress: {
+            required: true,
+            message: '请选择药店所属区域',
+            validator: (rule, value) => value !== null && value !== ''
+          },
+          storeAddressDetail: {
+            type: 'string',
+            required: true,
+            Pattern: /\S/g,
+            message: '请输入药店详细地址'
+          },
+          storeContact: {
+            type: 'string',
+            required: true,
+            Pattern: /\S/g,
+            message: '请输入药店联系人姓名'
+          },
+          storeContactPhone: {
+            required: true,
+            message: '请输入正确药店联系人电话',
+            validator: (rule, value) => {
+              return (/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) || (/0\d{2,3}-[1-9]\d{6,7}/.test(value))
+            }
+          }
+        };
+        const validator = new Schema(descriptor);
+        validator.validate(this.userInfo, { first: true }).then(() => {
+          console.log('passed')
+          this.postForm();
+        }).catch(({ errors, fields }) => {
+          this.showErrorMsg(`${errors[0].message}`)
+        })
+      },
+      postForm() {
+        if (this.isShowDetail) {
+          return false;
+        }
+        this.isSumbiting = true;
+        let obj = {};
+        obj.drugUserName = this.userInfo.drugUserName;
+        obj.idCard = this.userInfo.idCard;
+        obj.userAge = this.userInfo.userAge;
+        obj.userSex = this.userInfo.userSex ? 'F' : 'M';
+        obj.userPhone = this.userInfo.userPhone;
+        obj.isUserPhone = this.isUser ? 1 : 0;
+        obj.isFromHighRisk = this.userInfo.from.find(i => i === '1') !== undefined ? 1 : 0;
+        obj.isCloseWithHighPeople = this.userInfo.from.find(i => i === '3') !== undefined ? 1 : 0;
+        obj.isOtherSource = this.userInfo.from.find(i => i === '4') !== undefined ? 1 : 0;
+        obj.isToHighRiskIn14 = this.userInfo.from.find(i => i === '2') !== undefined ? 1 : 0;
+        obj.hasOverseaTravelHis = this.userInfo.isTravel ? '1' : '2';
+        obj.isFeverSymptoms = this.userInfo.isFever ? '1' : '0';
+        obj.isCoughSymptoms = this.userInfo.isCough ? '1' : '0';
+        obj.isOtherSymptoms = this.userInfo.isOther ? '1' : '0';
+        obj.isVisitedHospital = this.userInfo.isSeeD ? '1' : '0';
+        obj.emergencyContact = this.userInfo.emergencyContact;
+        obj.emergencyPhone = this.userInfo.emergencyPhone;
+        obj.purchaseTime = this.userInfo.purchaseTime;
+        let list = []
+        this.userInfo.drugNames.map(i => {
+          let arr = i.split('+');
+          list.push({ id: arr[0], name: arr[1] })
+        })
+        obj.drugList = list;
+        obj.storeContact = this.userInfo.storeContact;
+        obj.storeContactPhone = this.userInfo.storeContactPhone;
+        obj.remark = this.userInfo.remark;
+        obj.userAddress = this.userInfo.userAddress;
+        obj.storeAddress = this.userInfo.storeAddressDetail;
+        obj.provinceCode = this.userInfo.area[0];
+        obj.cityCode = this.userInfo.area[1];
+        obj.countyCode = this.userInfo.area[2];
+        let address1 = this.decryptCode(this.userInfo.area).split('/')
+        let address2 = this.isChangeStoreAddress ? this.decryptCode(this.userInfo.storeAddress).split('/') : this.placeholder.split('/')
+        obj.storeCode = this.userInfo.storeCode;
+        obj.storeName = this.userInfo.storeName;
+        obj.province = address1[0]
+        obj.storeProvince = address2[0]
+        obj.city = address1[1]
+        obj.storeCity = address2[1]
+        if (address1.length > 2) {
+          obj.county = address1[2]
+        }
+        if (address2.length > 2) {
+          obj.storeCounty = address2[2]
+        }
+        this.axios({
+          method: 'post',
+          url: `${this.$root.$data.baseUrl}/mspWechat/disp/drugsaleReg/saveDrug`,
+          data: obj
+        }).then(res => {
+          this.isSubmitForm = true;
+          this.isSuccess = res.data.data >= 1
+          this.isSumbiting = false;
+        })
+      }
     }
+  }
 </script>
 
 <style lang="less">
