@@ -1,12 +1,12 @@
 const path = require('path');
-const glob = require('glob-all');
+// const glob = require('glob-all');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');//压缩css
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');//分离css单独引用,这个loader不能喝style-loader一起用
-const PurgeCSSPlugin = require('purgecss-webpack-plugin')//利用tree-shaking来移除没有用到的css，这个插件必须和上面的分离css插件一起用
+// const PurgeCSSPlugin = require('purgecss-webpack-plugin')//利用tree-shaking来移除没有用到的css，这个插件必须和上面的分离css插件一起用
 const DllReferencePlugin = require('webpack/lib/DllReferencePlugin');//链接动态链接库，小项目依赖少的话不需要做动态链接库，不然反而会增加打包后的体积大小
 const HappyPack = require('happypack');//多进程打包
 module.exports = {
@@ -100,7 +100,7 @@ module.exports = {
       }
     ]
   },
-  devtool: "cheap-module-source-map",
+  devtool: "none",
   optimization: {
     splitChunks: {
       cacheGroups: {
@@ -177,11 +177,11 @@ module.exports = {
       filename: 'css/[name]-[hash].css'
     }),
     //移除多余的css
-    new PurgeCSSPlugin({
-      content:['./dist/index/html'],
-      //路径必须是绝对路径,有个BUG去除不掉index.vue里面的多余css
-      paths: glob.sync([`${path.join(__dirname, 'page')}/**/*`,`${path.join(__dirname, 'page')}/*`], { nodir: true })
-    }),
+    // new PurgeCSSPlugin({
+    //   content:['./dist/index/html'],
+    //   //路径必须是绝对路径
+    //   paths: glob.sync([`${path.join(__dirname, 'page')}/**/*`,`${path.join(__dirname, 'page')}/*`], { nodir: true })
+    // }),
     //css压缩
     new OptimizeCssAssetsWebpackPlugin({
       assetNameRegExp: /\.css$/g,
