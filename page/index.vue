@@ -459,7 +459,7 @@
         obj.drugUserName = this.userInfo.drugUserName;
         obj.idCard = this.userInfo.idCard;
         obj.userAge = this.userInfo.userAge;
-        obj.userSex = this.userInfo.userSex ? 'F' : 'M';
+        obj.userSex = this.userInfo.userSex ? 'M' : 'F';
         obj.userPhone = this.userInfo.userPhone;
         obj.isUserPhone = this.isUser ? 1 : 0;
         obj.isFromHighRisk = this.userInfo.from.find(i => i === '1') !== undefined ? 1 : 0;
